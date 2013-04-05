@@ -33,6 +33,48 @@
       </address>
     </author>
 
+    <author fullname="Shane Amante" initials="S." surname="Amante">
+      <organization>Level 3 Communications, Inc.</organization>
+      <address>
+	<postal>
+	  <street>1025 Eldorado Blvd</street>
+	  <city>Broomfield</city>
+	  <region>CO</region>
+	  <code>80021</code>
+	  <country>US</country>
+	</postal>
+	<email>shane@level3.net</email>
+      </address>
+    </author>
+
+    <author fullname="Tom Scholl" initials="T." surname="Scholl">
+      <organization>Amazon</organization>
+      <address>
+	<postal>
+	  <street></street>
+	  <city>Seattle</city>
+	  <region>WN</region>
+	  <code></code>
+	  <country>US</country>
+	</postal>
+	<email>tscholl@amazon.com</email>
+      </address>
+    </author>
+
+    <author fullname="Luay Jalil" initials="L." surname="Jalil">
+      <organization>Verizon</organization>
+      <address>
+	<postal>
+	  <street></street>
+	  <city>Dallas</city>
+	  <region>TX</region>
+	  <code></code>
+	  <country>US</country>
+	</postal>
+	<email>luay.jalil@verizon.com</email>
+      </address>
+    </author>
+
     <date day="5" month="April" year="2013"/>
 
     <area>Routing</area>
@@ -183,166 +225,247 @@
       <t>
 	IGP advertisement of MPLS label switched paths requires a new set of
 	protocol semantics (path paradigm), which hardly can be expressed using
-	the existing OSPF protocol.  This document describes OSPF protocol extensions
+	the existing OSPF protocol semantics. This document describes OSPF protocol extensions
 	which allows generic advertisement of MPLS label switched paths in OSPF.
       </t>
     </section>
 
   </section>
 
-    <section title="MPLS label TLV">
-      <t>The MPLS Label TLV may be originated by any <xref target="RFC3630">Traffic Engineering</xref>
-      capable router in an OSPF domain. A router may advertise MPLS labels along with so called 'ERO'
-      path segments describing the label switched path. Since ERO style path notation allows to
-      express pointers to link and node IP addresses any label switched path, sourced by any protocol
-      can be described.
+  <section title="OSPF MPLS LSA Format">
+
+    <section title="LSA Type">
+
+      <t>
+	This extension makes use of the Opaque LSAs <xref target="RFC2370"/>.
       </t>
 
-      <t>Due to the limited size of subTLV space (See <xref
-      target="RFC5311"/> section 4.5 for details), The MPLS Label TLV has
-      cumulative rather than canceling semantics. If a router originates
-      more than one MPLS Label TLV with the same Label value, then the
-      subTLVs of the second, third, etc. TLV are accumulated. Since some
-      subTLVs represent an ordered set (e.g. ERO subTLVs) and in order to
-      not complicate the cross-fragment tracking logic, all subTLVs for a
-      given label value MUST be present in a single OSPF fragment.
+      <t>
+	Three types of Opaque LSAs exist, each of which has a different
+	flooding scope. This proposal uses only Type 10 LSAs, which have an
+	area flooding scope.
       </t>
 
-      <t>The MPLS Label TLV has type 149 and has the following format:</t>
+      <t>
+	One new LSA is defined, the MPLS Label LSA. This LSA advertises
+	MPLS labels along with their path information.
+      </t>
+    
+    </section>
 
-        <figure anchor="MPLS-TLV-figure" title="MPLS TLV format">
-          <artwork>
-   0                   1                   2                   3
-   0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
-  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-  |              Type             |             Length            |
-  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-  |U|R|R|R|            MPLS Label                 |
-  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-  </artwork>
-        </figure>
+    <section title="LSA ID">
+      <t>
+	The LSA ID of an Opaque LSA is defined as having eight bits
+	of type data and 24 bits of type-specific data.  The MPLS Label LSA
+	uses type 149. The remaining 24 bits are 4 zero bits followed by the
+	MPLS Label value as follows:
+      </t>
 
-      <t><list style="symbols">
-	  <t>4 bits of flags, consisting of:
-	  <list style="symbols">
-	    <t>1 bit of up/down information (U bit)</t>
-	    <t>3 bits are reserved for future use</t>
-	  </list></t>
-	  <t>20 bits of MPLS label information</t>
-	  <t>0-252 octets of sub-TLVs, where each sub-TLV consists of a
-	  sequence of:
-	  <list style="symbols">
-	    <t>1 octet of sub-TLV type</t>
-	    <t>1 octet of length of the value field of the sub-TLV</t>
-	    <t>0-250 octets of value</t>
-	  </list></t>
-	</list></t>	
+      <figure anchor="MPLS-TLV-figure" title="MPLS TLV format">
+	<artwork>
+       0                   1                   2                   3
+       0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
+      +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+      |      149      |0|0|0|0|              MPLS Label               |
+      +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+	</artwork>
+      </figure>
 
-	<section title="Flags">
-	  <t>Flags
-	  <list style="hanging">
-	    <t>Up/Down Bit: A router may flood MPLS label information across level boundaries.
-	    In order to prevent flooding loops, a router will Set the Up/Down (U-Bit)
-	    when propagating from Level 2 down to Level 1. This is done as per the
-	    procedures for IP Prefixes lined out <xref target="RFC5302">RFC 5302</xref>.
-	    </t>
-	  </list></t>
-	</section>
-
-	<section title="subTLV support">
-	  <t>
-	    An originating router MAY want to attach one or more
-	    subTLVs to the MPLS label TLV.  SubTLVs presence is inferred from the
-	    length of the MPLS Label TLV.  If the MPLS Label TLV Length field is >
-	    3 octets then one or more subTLVs may be present. 
-	  </t>
-	</section>
-
-	<section title="IPv4 Prefix ERO subTLV">
-	  <t>The IPv4 ERO subTLV (Type 1) describes a path segment using IPv4 Prefix style of encoding.
-	  Its appearance and semantics have been borrowed from <xref target="RFC3209">
-	  Section 4.3.3.2</xref>.
-	  </t>
-
-	  <t>The 'Prefix Length' field contains the length of the prefix in bits.
-	  Only the most significant octets of the prefix are encoded. I.e. 1
-	  octet for prefix length 1 up to 8, 2 octets for prefix length 9 to
-	  16, 3 octets for prefix length 17 up to 24 and 4 octets for prefix
-	  length 25 up to 32, etc.</t>
-
-	  <t>
-	    The L bit in the subobject is a one-bit attribute.  If the L bit is
-	    set, then the value of the attribute is 'loose.'  Otherwise, the
-	    value of the attribute is 'strict.'
-	  </t>
-
-        <figure anchor="IPv4-Prefix-ERO-subTLV-figure" title="IPv4 Prefix ERO subTLV format">
-          <artwork>
-    0                   1                   2                   3
-    0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
-   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-   |L|    Type     |     Length    | Prefix Length |  IPv4 Prefix  |
-   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-   | IPv4 Prefix  (continued, variable-length      |
-   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-
-  </artwork> 
-        </figure>
-	</section> <!-- end IPv4 Prefix ERO subtLV -->
-
-	<section title="IPv6 Prefix ERO subTLV">
-	  <t>The IPv6 ERO subTLV (Type 2) describes a path segment using IPv6 Prefix style of encoding.
-	  Its appearance and semantics have been borrowed from <xref target="RFC3209">
-	  Section 4.3.3.3</xref>.
-	  </t>
-
-	  <t>The 'Prefix Length' field contains the length of the prefix in bits.
-	  Only the most significant octets of the prefix are encoded. I.e. 1
-	  octet for prefix length 1 up to 8, 2 octets for prefix length 9 to
-	  16, 3 octets for prefix length 17 up to 24 and 4 octets for prefix
-	  length 25 up to 32, ...., 16 octets for prefix length 113 up to 128.
-	  </t>
-
-	  <t>
-	    The L bit in the subobject is a one-bit attribute.  If the L bit is
-	    set, then the value of the attribute is 'loose.'  Otherwise, the
-	    value of the attribute is 'strict.'
-	  </t>
-
-        <figure anchor="IPv6-Prefix-ERO-subTLV-figure" title="IPv6 Prefix ERO subTLV format">
-          <artwork>
-    0                   1                   2                   3
-    0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
-   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-   |L|    Type     |     Length    | Prefix Length | IPv6 Prefix   |
-   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-   | IPv6 Prefix (continued)                                       |
-   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-   | IPv6 Prefix (continued)                                       |
-   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-   | IPv6 Prefix (continued)                                       |
-   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-   | IPv6 Prefix (continued, variable length)      |
-   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-
-  </artwork>
-        </figure>
-	</section> <!-- end IPv6 Prefix ERO subtLV -->
-
-	<section title="Prefix ERO subTLV path semantics">
-	  <t>
-	    All 'Prefix ERO' information represents an ordered set
-	    which describes the segments of a label-switched path. The last Prefix
-	    ERO subTLV describes the segment closest to the egress point of the
-	    LSP. Contrary the first Prefix ERO subTLV describes the first segment
-	    of a label switched path. If a router extends or stitches a label
-	    switched path it MUST prepend the new segments path information to the
-	    Prefix ERO list.
-	  </t>
-	</section>
-
+      <t>
+	The 'MPLS Label' field holds the 20 Bit MPLS label.
+	Therefore a maximum of 2^20 MPLS Label LSAs may be sourced
+	by a single system. 
+      </t>
 
     </section>
+
+
+    <section title="LSA Format Overview">
+
+      <t>
+	The MPLS Label LSA starts with the standard LSA header:
+      </t>
+
+      <figure anchor="MPLS-Label-LSA-figure" title="MPLS Label LSA format">
+	<artwork>
+       0                   1                   2                   3
+       0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
+      +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+      |            LS age             |     Options   |       10      |
+      +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+      |      149      |0|0|0|0|            MPLS Label                 |
+      +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+      |                     Advertising Router                        |
+      +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+      |                     LS sequence number                        |
+      +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+      |         LS checksum           |             length            |
+      +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+      |                                                               |
+      +-                            TLVs                             -+
+      |                             ...                               |
+	</artwork>
+      </figure>
+
+      <t>
+	The MPLS Label LSA may be originated by any <xref
+	target="RFC3630">Traffic Engineering</xref> capable router in an OSPF
+	domain. A router may advertise MPLS labels along with so called 'ERO'
+	path segments describing the label switched path. This gets encoded
+	in subsequent TLVs.  Since ERO style path notation allows to express
+	pointers to link and node IP addresses any label switched path,
+	sourced by any protocol can be described.
+      </t>
+
+    </section>
+
+    <section title="TLV Header">
+
+      <t>
+	The LSA payload consists of one or more nested Type/Length/Value
+	(TLV) triplets for extensibility.  The format of each TLV is:
+      </t>
+
+      <figure anchor="TLV-figure" title="TLV format">
+	<artwork>
+       0                   1                   2                   3
+       0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
+      +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+      |              Type             |             Length            |
+      +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+      |                            Value...                           |
+      .                                                               .
+      .                                                               .
+      .                                                               .
+      +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+	</artwork> 
+      </figure>
+
+      <t>
+	The Length field defines the length of the value portion in
+	octets (thus a TLV with no value portion would have a length of zero).
+	The TLV is padded to four-octet alignment; padding is not included in
+	the length field (so a three octet value would have a length of three,
+	but the total size of the TLV would be eight octets). Nested TLVs are
+	also 32-bit aligned. Unrecognized types are ignored.
+      </t>
+
+      <t>
+	This memo defines Types 1, 2 and 3. See the IANA Considerations
+	section for allocation of new Types.
+      </t>
+    </section>
+  </section>
+
+  <section title="LSA payload details">
+
+    <t>
+      An LSA contains one or more TLVs, describing properties of the advertised MPLS label.
+    </t>
+
+    <section title="IPv4 Prefix ERO TLV">
+      <t>The IPv4 ERO TLV (Type 1) describes a path segment using IPv4 Prefix style of encoding.
+      Its appearance and semantics have been borrowed from <xref target="RFC3209">
+      Section 4.3.3.2</xref>.
+      </t>
+
+      <t>
+	the 'IPv4 Address' is treated as a prefix based on
+	the prefix length value below.  Bits beyond the prefix are
+         ignored on receipt and SHOULD be set to zero on transmission.
+      </t>
+
+      <t>
+	The 'Prefix Length' field contains the length of the prefix in bits.
+      </t>
+
+      <t>
+	The 'L' bit in the TLV is a one-bit attribute.  If the L bit is
+	set, then the value of the attribute is 'loose.'  Otherwise, the
+	value of the attribute is 'strict.'
+      </t>
+
+      <t>
+	The 'Reserved' bits are for future use. They should be zero on
+	transmission and ignored on receipt.
+      </t>
+
+      <figure anchor="IPv4-Prefix-ERO-TLV-figure" title="IPv4 Prefix ERO TLV format">
+	<artwork>
+       0                   1                   2                   3
+       0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
+      +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+      |              Type             |             Length            |
+      +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+      |                     IPv4 Address (4 octets)                   |
+      +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+      | Prefix Length |L|                   Reserved                  | 
+      +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+	</artwork> 
+      </figure>
+    </section> <!-- end IPv4 Prefix ERO TLV -->
+
+    <section title="IPv6 Prefix ERO TLV">
+      <t>The IPv6 ERO TLV (Type 2) describes a path segment using IPv6 Prefix style of encoding.
+      Its appearance and semantics have been borrowed from <xref target="RFC3209">
+      Section 4.3.3.2</xref>.
+      </t>
+
+      <t>
+	the 'IPv6 Address' is treated as a prefix based on
+	the prefix length value below.  Bits beyond the prefix are
+         ignored on receipt and SHOULD be set to zero on transmission.
+      </t>
+
+      <t>
+	The 'Prefix Length' field contains the length of the prefix in bits.
+      </t>
+
+      <t>
+	The 'L' bit in the TLV is a one-bit attribute.  If the L bit is
+	set, then the value of the attribute is 'loose.'  Otherwise, the
+	value of the attribute is 'strict.'
+      </t>
+
+      <t>
+	The 'Reserved' bits are for future use. They should be zero on
+	transmission and ignored on receipt.
+      </t>
+
+      <figure anchor="IPv6-Prefix-ERO-TLV-figure" title="IPv6 Prefix ERO TLV format">
+	<artwork>
+       0                   1                   2                   3
+       0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
+      +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+      |              Type             |             Length            |
+      +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+      | IPv6 Address (16 octets)                                      |
+      +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+      | IPv6 Address (continued)                                      |
+      +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+      | IPv6 Address (continued)                                      |
+      +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+      | IPv6 Address (continued)                                      |
+      +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+      | Prefix Length |L|                   Reserved                  | 
+      +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+	</artwork> 
+      </figure>
+    </section> <!-- end IPv6 Prefix ERO TLV -->
+
+    <section title="Prefix ERO TLV path semantics">
+      <t>
+	All 'Prefix ERO' information represents an ordered set
+	which describes the segments of a label-switched path. The last Prefix
+	ERO TLV describes the segment closest to the egress point of the
+	LSP. Contrary the first Prefix ERO TLV describes the first segment
+	of a label switched path. If a router extends or stitches a label
+	switched path it MUST prepend the new segments path information to the
+	Prefix ERO list.
+      </t>
+    </section>
+  
+  </section>
 
     <section title="Advertising Label Examples">
       <section title="Sample Topology">
@@ -584,6 +707,7 @@
 
     <references title="Normative References">
       <?rfc include="http://xml.resource.org/public/rfc/bibxml/reference.RFC.2119.xml"?>
+      <?rfc include="http://xml.resource.org/public/rfc/bibxml/reference.RFC.2370.xml"?>
       <?rfc include="http://xml.resource.org/public/rfc/bibxml/reference.RFC.3107.xml"?>
       <?rfc include="http://xml.resource.org/public/rfc/bibxml/reference.RFC.3209.xml"?>
       <?rfc include="http://xml.resource.org/public/rfc/bibxml/reference.RFC.3630.xml"?>
