@@ -10,12 +10,12 @@
 <?rfc inline="yes"?>
 <?rfc compact="yes" ?>
 <?rfc subcompact="no" ?>
-<rfc category="std" docName="draft-gredler-isis-label-advertisement-00" ipr="trust200902">
+<rfc category="std" docName="draft-gredler-ospf-label-advertisement-00" ipr="trust200902">
 
   <!-- ***** FRONT MATTER ***** -->
 
   <front>
-    <title>Advertising MPLS labels in IS-IS</title>
+    <title>Advertising MPLS labels in OSPF</title>
 
     <!-- add 'role="editor"' below for the editors if appropriate -->
 
@@ -33,29 +33,15 @@
       </address>
     </author>
 
-    <author fullname="Shane Amante" initials="S." surname="Amante">
-      <organization>Level 3 Communications, Inc.</organization>
-      <address>
-	<postal>
-	  <street>1025 Eldorado Blvd</street>
-	  <city>Broomfield</city>
-	  <region>CO</region>
-	  <code>80021</code>
-	  <country>US</country>
-	</postal>
-	<email>shane@level3.net</email>
-      </address>
-    </author>
-
-    <date day="4" month="April" year="2013"/>
+    <date day="5" month="April" year="2013"/>
 
     <area>Routing</area>
 
-    <workgroup>IS-IS for IP Internets Working Group</workgroup>
+    <workgroup>Open Shortest Path First IGP Working Group</workgroup>
 
     <keyword>MPLS</keyword>
     <keyword>IGP</keyword>
-    <keyword>IS-IS</keyword>
+    <keyword>OSPF</keyword>
     <keyword>Label advertisement</keyword>
 
     <abstract>
@@ -71,7 +57,7 @@
 	of link-state protocols for MPLS label distribution makes sense</t>
 
 	<t>This document describes the protocol extension to distribute
-	MPLS labels by the IS-IS protocol.</t>
+	MPLS labels by the OSPF protocol.</t>
     </abstract>
 
     <note title="Requirements Language">
@@ -105,7 +91,7 @@
       transient.  As such configuring and un-configuring the explicit session
       is an operational burden and therefore should be avoided.</t>
 
-      <t>This document describes a single IS-IS protocol extension which allows
+      <t>This document describes a single OSPF protocol extension which allows
       routers to advertise MPLS labels within and beyond an IGP domain, and
       controlling inter-area distribution.
       </t> 
@@ -113,7 +99,7 @@
     </section>
 
   <section title="Motivation, Rationale and Applicability">
-    <t>Distributing MPLS labels using IS-IS has been described in
+    <t>Distributing MPLS labels using OSPF has been described in
     <xref target="I-D.previdi-filsfils-isis-segment-routing"> Segment
     Routing</xref>. The authors propose to re-use the IS-Reach TLVs (22,
     23, 222) and Extended IP Prefix TLVs (135, 236) for carrying the label
@@ -197,16 +183,16 @@
       <t>
 	IGP advertisement of MPLS label switched paths requires a new set of
 	protocol semantics (path paradigm), which hardly can be expressed using
-	the existing IS-IS protocol.  This document describes IS-IS protocol extensions
-	which allows generic advertisement of MPLS label switched paths in IS-IS.
+	the existing OSPF protocol.  This document describes OSPF protocol extensions
+	which allows generic advertisement of MPLS label switched paths in OSPF.
       </t>
     </section>
 
   </section>
 
     <section title="MPLS label TLV">
-      <t>The MPLS Label TLV may be originated by any <xref target="RFC5305">Traffic Engineering</xref>
-      capable router in an IS-IS domain. A router may advertise MPLS labels along with so called 'ERO'
+      <t>The MPLS Label TLV may be originated by any <xref target="RFC3630">Traffic Engineering</xref>
+      capable router in an OSPF domain. A router may advertise MPLS labels along with so called 'ERO'
       path segments describing the label switched path. Since ERO style path notation allows to
       express pointers to link and node IP addresses any label switched path, sourced by any protocol
       can be described.
@@ -219,17 +205,18 @@
       subTLVs of the second, third, etc. TLV are accumulated. Since some
       subTLVs represent an ordered set (e.g. ERO subTLVs) and in order to
       not complicate the cross-fragment tracking logic, all subTLVs for a
-      given label value MUST be present in a single IS-IS fragment.
+      given label value MUST be present in a single OSPF fragment.
       </t>
 
-      <t>The MPLS Label TLV has type 149 and contains a data structure
-      consisting of:</t>
+      <t>The MPLS Label TLV has type 149 and has the following format:</t>
 
         <figure anchor="MPLS-TLV-figure" title="MPLS TLV format">
           <artwork>
    0                   1                   2                   3
    0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
-  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+  |              Type             |             Length            |
+  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
   |U|R|R|R|            MPLS Label                 |
   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
   </artwork>
@@ -584,7 +571,7 @@
     </section>
 
     <section anchor="Security" title="Security Considerations">
-      <t> This document does not introduce any change in terms of IS-IS
+      <t> This document does not introduce any change in terms of OSPF
       security. It simply proposes to flood MPLS label information via the IGP.
       All existing procedures to ensure message integrity do apply here.
       </t>
@@ -599,11 +586,11 @@
       <?rfc include="http://xml.resource.org/public/rfc/bibxml/reference.RFC.2119.xml"?>
       <?rfc include="http://xml.resource.org/public/rfc/bibxml/reference.RFC.3107.xml"?>
       <?rfc include="http://xml.resource.org/public/rfc/bibxml/reference.RFC.3209.xml"?>
+      <?rfc include="http://xml.resource.org/public/rfc/bibxml/reference.RFC.3630.xml"?>
       <?rfc include="http://xml.resource.org/public/rfc/bibxml/reference.RFC.4206.xml"?>
       <?rfc include="http://xml.resource.org/public/rfc/bibxml/reference.RFC.5036.xml"?>
       <?rfc include="http://xml.resource.org/public/rfc/bibxml/reference.RFC.5151.xml"?>
       <?rfc include="http://xml.resource.org/public/rfc/bibxml/reference.RFC.5302.xml"?>
-      <?rfc include="http://xml.resource.org/public/rfc/bibxml/reference.RFC.5305.xml"?>
       <?rfc include="http://xml.resource.org/public/rfc/bibxml/reference.RFC.5311.xml"?>
     </references>
 
