@@ -253,7 +253,7 @@
     
     </section>
 
-    <section title="LSA ID">
+    <section title="OSPFv2 LSA ID">
       <t>
 	The LSA ID of an Opaque LSA is defined as having eight bits
 	of type data and 24 bits of type-specific data.  The MPLS Label LSA
@@ -261,7 +261,7 @@
 	MPLS Label value as follows:
       </t>
 
-      <figure anchor="MPLS-TLV-figure" title="MPLS TLV format">
+      <figure anchor="MPLS-LSAID-figure" title="MPLS LSA-ID format">
 	<artwork>
 0                   1                   2                   3
 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
@@ -280,13 +280,13 @@
     </section>
 
 
-    <section title="LSA Format Overview">
+    <section title="OSPFv2 LSA Format Overview">
 
       <t>
-	The MPLS Label LSA starts with the standard LSA header:
+	The MPLS Label LSA for OSPFv2 starts with the standard OSPFv2 LSA header:
       </t>
 
-      <figure anchor="MPLS-Label-LSA-figure" title="MPLS Label LSA format">
+      <figure anchor="MPLS-Label-OSPFv2-LSA-figure" title="MPLS Label OSPFv2 LSA format">
 	<artwork>
 0                   1                   2                   3
 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
@@ -306,18 +306,66 @@
 |                             ...                               |
 	</artwork>
       </figure>
+    </section>
+
+    <section title="OSPFv3 LSA ID">
+      <t>
+	The OSPFv3 LSA ID of an MPLS Label LSA is defined as having twelve bits
+	of zero followed by the 20-Bit label MPLS Label value as follows:
+      </t>
+
+      <figure anchor="MPLS-OSPFv3-LSAID-figure" title="MPLS OSPFv3 LSA-ID format">
+	<artwork>
+0                   1                   2                   3
+0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|0|0|0|0|0|0|0|0|0|0|0|0|              MPLS Label               |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+	</artwork>
+      </figure>
 
       <t>
-	The MPLS Label LSA may be originated by any <xref
-	target="RFC3630">Traffic Engineering</xref> capable router in an OSPF
-	domain. A router may advertise MPLS labels along with so called 'ERO'
-	path segments describing the label switched path. This gets encoded
-	in subsequent TLVs.  Since ERO style path notation allows to express
-	pointers to link and node IP addresses. Now any label switched path,
-	sourced by any protocol can be described.
+	The 'MPLS Label' field holds the 20 Bit MPLS label.
+	Therefore a maximum of 2^20 MPLS Label LSAs may be sourced
+	by a single system. 
       </t>
 
     </section>
+
+
+    <section title="OSPFv3 LSA Format Overview">
+
+      <t>
+	The MPLS Label LSA for OSPFv3 starts with the standard OSPFv3 LSA header:
+      </t>
+
+      <figure anchor="MPLS-Label-OSPFv3-LSA-figure" title="MPLS Label OSPFv3 LSA format">
+	<artwork>
+0                   1                   2                   3
+0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|            LS age             |1|S12|          149            |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|0|0|0|0|0|0|0|0|0|0|0|0|               MPLS Label              |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|                       Advertising Router                      |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|                       LS sequence number                      |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|        LS checksum           |             Length             |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|                                                               |
++-                            TLVs                             -+
+|                             ...                               |
+	</artwork>
+      </figure>
+
+      <t>
+	XXX
+      </t>
+
+    </section>
+
 
     <section title="TLV Header">
 
@@ -360,10 +408,22 @@
   <section title="LSA payload details">
 
     <t>
+      The MPLS Label LSA may be originated by any <xref
+      target="RFC3630">Traffic Engineering</xref> capable router in an OSPF
+      domain. A router may advertise MPLS labels along with so called 'ERO'
+      path segments describing the label switched path. This gets encoded
+      in subsequent TLVs.  Since ERO style path notation allows to express
+      pointers to link and node IP addresses. Now any label switched path,
+      sourced by any protocol can be described.
+    </t>
+
+    <t>
       An LSA contains one or more TLVs, describing properties of the advertised MPLS label.
     </t>
 
-    <section title="Prefix ERO TLVs and path semantics">
+
+
+    <section title="Prefix ERO TLVs">
       <t>
 	All 'Prefix ERO' information represents an ordered set
 	which describes the segments of a label-switched path. The last Prefix
@@ -651,16 +711,16 @@
     <section title="Inter Area Protocol Procedures">
       <section title="Applicability">
 	<t>
-	  Propagation of a MPLS LSP across a level boundary is a local policy decision.
+	  Propagation of a MPLS LSP across an area boundary is a local policy decision.
 	</t>
       </section>
 
       <section title="Data plane operations">
 	<t>
-	If local policy dictates that a given L1L2 router needs to
-	re-advertise a MPLS LSPs from one Level to another then it MUST
+	If local policy dictates that a given ABR router needs to
+	re-advertise a MPLS LSPs from one area to another then it MUST
 	allocate a new label and program its label forwarding table to connect
-	the new label to the path in the respective other level. Depending on
+	the new label to the path in the respective other area. Depending on
 	how to reach the re-advertised LSP, this is typically done using
 	a MPLS 'SWAP' or 'SWAP/PUSH' data plane operation.
 	</t>
@@ -668,10 +728,10 @@
 
       <section title="Control plane operations">
 	<t>
-	If local policy dictates that a given L1L2 router needs to
-	re-advertise a MPLS LSPs from one Level to another then it
+	If local policy dictates that a given ABR router needs to
+	re-advertise a MPLS LSPs from one area to another then it
 	must prepend its "Traffic-Engineering-ID" as a loose hop in the
-	Prefix ERO subTLV list.  
+	Prefix ERO TLV list.  
 	</t>
       </section>
 
