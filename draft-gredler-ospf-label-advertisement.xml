@@ -19,7 +19,7 @@
 
     <!-- add 'role="editor"' below for the editors if appropriate -->
 
-    <author fullname="Hannes Gredler" initials="H." surname="Gredler">
+    <author fullname="Hannes Gredler" initials="H." surname="Gredler" role ="editor">
       <organization>Juniper Networks, Inc.</organization>
       <address>
 	<postal>
@@ -225,7 +225,7 @@
       <t>
 	IGP advertisement of MPLS label switched paths requires a new set of
 	protocol semantics (path paradigm), which hardly can be expressed using
-	the existing OSPF protocol semantics. This document describes OSPF protocol extensions
+	the existing OSPF protocol semantics. This document describes protocol extensions
 	which allows generic advertisement of MPLS label switched paths in OSPF.
       </t>
     </section>
@@ -263,11 +263,11 @@
 
       <figure anchor="MPLS-TLV-figure" title="MPLS TLV format">
 	<artwork>
-       0                   1                   2                   3
-       0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
-      +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-      |      149      |0|0|0|0|              MPLS Label               |
-      +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+0                   1                   2                   3
+0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|      149      |0|0|0|0|              MPLS Label               |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 	</artwork>
       </figure>
 
@@ -288,22 +288,22 @@
 
       <figure anchor="MPLS-Label-LSA-figure" title="MPLS Label LSA format">
 	<artwork>
-       0                   1                   2                   3
-       0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
-      +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-      |            LS age             |     Options   |       10      |
-      +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-      |      149      |0|0|0|0|            MPLS Label                 |
-      +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-      |                     Advertising Router                        |
-      +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-      |                     LS sequence number                        |
-      +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-      |         LS checksum           |             length            |
-      +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-      |                                                               |
-      +-                            TLVs                             -+
-      |                             ...                               |
+0                   1                   2                   3
+0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|            LS age             |     Options   |       10      |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|      149      |0|0|0|0|            MPLS Label                 |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|                     Advertising Router                        |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|                     LS sequence number                        |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|         LS checksum           |             length            |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|                                                               |
++-                            TLVs                             -+
+|                             ...                               |
 	</artwork>
       </figure>
 
@@ -313,7 +313,7 @@
 	domain. A router may advertise MPLS labels along with so called 'ERO'
 	path segments describing the label switched path. This gets encoded
 	in subsequent TLVs.  Since ERO style path notation allows to express
-	pointers to link and node IP addresses any label switched path,
+	pointers to link and node IP addresses. Now any label switched path,
 	sourced by any protocol can be described.
       </t>
 
@@ -323,21 +323,21 @@
 
       <t>
 	The LSA payload consists of one or more nested Type/Length/Value
-	(TLV) triplets for extensibility.  The format of each TLV is:
+	(TLV) triplets for extensibility. The format of each TLV is:
       </t>
 
       <figure anchor="TLV-figure" title="TLV format">
 	<artwork>
-       0                   1                   2                   3
-       0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
-      +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-      |              Type             |             Length            |
-      +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-      |                            Value...                           |
-      .                                                               .
-      .                                                               .
-      .                                                               .
-      +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+0                   1                   2                   3
+0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|              Type             |             Length            |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|                            Value...                           |
+.                                                               .
+.                                                               .
+.                                                               .
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 	</artwork> 
       </figure>
 
@@ -362,6 +362,17 @@
     <t>
       An LSA contains one or more TLVs, describing properties of the advertised MPLS label.
     </t>
+
+    <section title="Prefix ERO TLVs and path semantics">
+      <t>
+	All 'Prefix ERO' information represents an ordered set
+	which describes the segments of a label-switched path. The last Prefix
+	ERO TLV describes the segment closest to the egress point of the
+	LSP. Contrary the first Prefix ERO TLV describes the first segment
+	of a label switched path. If a router extends or stitches a label
+	switched path it MUST prepend the new segments path information to the
+	Prefix ERO list.
+      </t>
 
     <section title="IPv4 Prefix ERO TLV">
       <t>The IPv4 ERO TLV (Type 1) describes a path segment using IPv4 Prefix style of encoding.
@@ -392,15 +403,15 @@
 
       <figure anchor="IPv4-Prefix-ERO-TLV-figure" title="IPv4 Prefix ERO TLV format">
 	<artwork>
-       0                   1                   2                   3
-       0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
-      +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-      |              Type             |             Length            |
-      +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-      |                     IPv4 Address (4 octets)                   |
-      +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-      | Prefix Length |L|                   Reserved                  | 
-      +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+0                   1                   2                   3
+0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|              Type             |             Length            |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|                     IPv4 Address (4 octets)                   |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+| Prefix Length |L|                   Reserved                  | 
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 	</artwork> 
       </figure>
     </section> <!-- end IPv4 Prefix ERO TLV -->
@@ -434,36 +445,57 @@
 
       <figure anchor="IPv6-Prefix-ERO-TLV-figure" title="IPv6 Prefix ERO TLV format">
 	<artwork>
-       0                   1                   2                   3
-       0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
-      +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-      |              Type             |             Length            |
-      +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-      | IPv6 Address (16 octets)                                      |
-      +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-      | IPv6 Address (continued)                                      |
-      +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-      | IPv6 Address (continued)                                      |
-      +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-      | IPv6 Address (continued)                                      |
-      +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-      | Prefix Length |L|                   Reserved                  | 
-      +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+0                   1                   2                   3
+0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|              Type             |             Length            |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+| IPv6 Address (16 octets)                                      |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+| IPv6 Address (continued)                                      |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+| IPv6 Address (continued)                                      |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+| IPv6 Address (continued)                                      |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+| Prefix Length |L|                   Reserved                  | 
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 	</artwork> 
       </figure>
     </section> <!-- end IPv6 Prefix ERO TLV -->
 
-    <section title="Prefix ERO TLV path semantics">
-      <t>
-	All 'Prefix ERO' information represents an ordered set
-	which describes the segments of a label-switched path. The last Prefix
-	ERO TLV describes the segment closest to the egress point of the
-	LSP. Contrary the first Prefix ERO TLV describes the first segment
-	of a label switched path. If a router extends or stitches a label
-	switched path it MUST prepend the new segments path information to the
-	Prefix ERO list.
-      </t>
     </section>
+
+    <section title="Flags TLV">
+      <t>
+	The Flags TLV (Type 3) describes Flags for further MPLS LSA treatment.
+      </t>
+
+      <t>
+	Up/Down 'U' Bit: A router may flood MPLS label information across area boundaries.
+	In order to prevent flooding loops, a router will Set the Up/Down (U-Bit)
+	when propagating MPLS labels from Area 0 to a non-zero Area.
+      </t>
+
+      <t>
+	The 'Reserved' bits are for future use. They should be zero on
+	transmission and ignored on receipt.
+      </t>
+
+      <figure anchor="Flags-TLV-figure" title="Flags TLV format">
+	<artwork>
+0                   1                   2                   3
+0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|              Type             |             Length            |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|U|                         Reserved                            |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+	</artwork> 
+      </figure>
+    </section> <!-- end Flags TLV -->
+
+
   
   </section>
 
