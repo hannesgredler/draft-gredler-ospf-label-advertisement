@@ -87,19 +87,23 @@
     <keyword>Label advertisement</keyword>
 
     <abstract>
-      <t>Historically intra-AS MPLS label distribution was driven by
-      protocols like LDP and RSVP. Both of those protocols are session
-      oriented. In order to obtain a particular routers label binding for a
-      given destination FEC one needs to have first an established session
-      with that node.</t>
+      <t>Historically MPLS label distribution was driven by
+      protocols like LDP, RSVP and LBGP. All of those protocols are session
+      oriented. In order to obtain label binding for a given destination FEC from
+      a given router one needs first to establish an LDP/RSVP/LBGP session
+      with that router.
+      </t>
 
       <t><xref target="I-D.gredler-rtgwg-igp-label-advertisement">
 	Advertising MPLS labels in IGPs advertisement</xref>
 	describes several use cases where utilizing the flooding machinery
-	of link-state protocols for MPLS label distribution makes sense</t>
+	of link-state protocols for MPLS label distribution allows
+	to obtain the binding without requiring to establish an LDP/RSVP/LBGP
+	session with that router.
+      </t>
 
 	<t>This document describes the protocol extension to distribute
-	MPLS labels by the OSPF protocol.</t>
+	MPLS labels by the OSPFv2 and OSPFv3 protocol.</t>
     </abstract>
 
     <note title="Requirements Language">
@@ -111,37 +115,35 @@
   </front>
 
   <middle>
+
     <section title="Introduction">
       <t>MPLS label allocations are predominantly distributed by using
       the LDP <xref target="RFC5036"/>, RSVP <xref target="RFC5151"/> or
       labeled BGP <xref target="RFC3107"/> protocol. All of those protocols
       have in common that they are session oriented, which means that in
-      order to learn the Label Information database of a particular router
-      one needs to have a direct control-plane session using the given
-      protocol.</t>
+      order to obtain label binding for a given destination FEC from
+      a given router one needs first to establish a direct
+      control plane (LDP/RSVP/LBGP) session with that router.
+      </t>
 
       <t>There are a couple of
       <xref target="I-D.gredler-rtgwg-igp-label-advertisement">use cases</xref>
-      where the consumer of a MPLS label allocation may not be adjacent to the router
-      having allocated the label. Bringing up an explicit session using
-      existing label distribution protocols between the non-adjacent label
-      allocator and the label consumer is the existing remedy for this
-      dilemma.</t>
+      where the consumer of a MPLS label binding may not
+      be adjacent to the router that performs the binding. Bringing up an
+      explicit session using the existing label distribution protocols between
+      the non-adjacent router that bind the label and the router that
+      acts as a consumer of this binding is the existing remedy for 
+      this dilemma. </t>
 
-      <t> Depending on the application, retrieval and setup of
-      forwarding state of such >1 hop label allocations may only be
-      transient.  As such configuring and un-configuring the explicit session
-      is an operational burden and therefore should be avoided.</t>
-
-      <t>This document describes a single OSPF protocol extension which allows
-      routers to advertise MPLS labels within and beyond an IGP domain, and
+      <t>This document describes a single IS-IS protocol extension which allows
+      routers to advertise MPLS label bindings within and beyond an IGP domain, and
       controlling inter-area distribution.
       </t> 
 
     </section>
 
   <section title="Motivation, Rationale and Applicability">
-    <t>Distributing MPLS labels using OSPF has been described in
+    <t>Distributing MPLS labels using IS-IS has been described in
     <xref target="I-D.previdi-filsfils-isis-segment-routing"> Segment
     Routing</xref>. The authors propose to re-use the IS-Reach TLVs (22,
     23, 222) and Extended IP Prefix TLVs (135, 236) for carrying the label
@@ -620,18 +622,20 @@
 
       </section>
 
-      <section title="Pointer to an adjacent Router">
-	<t>If R1 would advertise a label &lt;N&gt; pointing to R2 it would encode as follows:</t>
+      <section title="One-hop LSP to an adjacent Router">
+	<t>If R1 would advertise a label &lt;N&gt; bound to a one-hop LSP
+	from R1 to R2 it would encode as follows:</t>
 		<t><list style="hangout">
 	  <t>TLV 149: MPLS label N, Flags {}:
 	  <list style="hangout">
-	    <t>IPv4 Prefix ERO subTLV: 192.168.1.2/32, Loose</t>
+	    <t>IPv4 Prefix ERO subTLV: 192.168.1.2/32, Strict</t>
 	  </list></t>
 	</list></t>	
       </section>
 
-      <section title="Pointer to an adjacent Router using a specific link">
-	<t>If R2 would advertise a label &lt;N&gt; pointing to R3, using the link #2 it would encode as follows</t>
+      <section title="One-hop LSP to an adjacent Router using a specific link">
+	<t>If R2 would advertise a label &lt;N&gt;bound to a one-hop LSP
+	from R2 to R3, using the link #2 it would encode as follows</t>
 	
 	<t><list style="hangout">
 	  <t>TLV 149: MPLS label &lt;N&gt;, Flags {}:
@@ -641,22 +645,24 @@
 	</list></t>	
       </section>
 
-      <section title="Pointer to an RSVP LSP">
+      <section title="Advertisement of an RSVP LSP">
 	<t>Consider a RSVP LSP name "R2-to-R6" traversing (R2 to R3 using link #1, R6):</t>
-	<t>If R2 would advertise a label &lt;N&gt; to R3, using the link #2 it would encode as follows</t>
+	<t>If R2 would advertise a label &lt;N&gt; bound to the RSVP LSP named 'R2-to-R6',
+	it would encode as follows</t>
 	
 	<t><list style="hangout">
 	  <t>TLV 149: MPLS label &lt;N&gt;, Flags {}:
 	  <list style="hangout">
 	    <t>IPv4 Prefix ERO subTLV: 10.0.0.4/32, Strict</t>
-	    <t>IPv4 Prefix ERO subTLV: 192.168.1.6/32, Loose</t>
+	    <t>IPv4 Prefix ERO subTLV: 192.168.1.6/32, Strict</t>
 	  </list></t>
 	</list></t>	
       </section>
 
-      <section title="Pointer to an LDP LSP">
-	<t>Consider a LDP LSP label  &lt;N&gt; pointing to FEC 172.16.0.0/12:</t>
-	<t>If R2 would re-advertise the LDP FEC it would encode as follows</t>
+      <section title="Advertisement of an LDP LSP">
+	<t>Consider R2 that creates a LDP label binding for FEC 172.16.0.0./12
+	using label &lt;N&gt;.</t>
+	<t>If R2 would re-advertise this binding in IS-IS it would encode as follows</t>
 	
 	<t><list style="hangout">
 	  <t>TLV 149: MPLS label &lt;N&gt;, Flags {}:
