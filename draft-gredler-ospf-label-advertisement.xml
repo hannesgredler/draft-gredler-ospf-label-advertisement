@@ -437,7 +437,7 @@
 
     <t>
       The following TLV extensions may be shared in both OSPV2 and OSPFv3.
-      Passing an IP adress of the other adress family (IPv4 in OPSFv3 or IPv6 in OSPFv2)
+      Passing an IP address of the other address family (IPv4 in OPSFv3 or IPv6 in OSPFv2)
       is possible as the information carried are related describing the hops
       along a path. The receiver of this information is a protocol agnostic
       path computation module.
