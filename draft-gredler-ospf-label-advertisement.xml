@@ -75,11 +75,11 @@
       </address>
     </author>
 
-    <date day="5" month="April" year="2013"/>
+    <date day="12" month="April" year="2013"/>
 
     <area>Routing</area>
 
-    <workgroup>Open Shortest Path First IGP Working Group</workgroup>
+    <workgroup>Open Shortest Path First IGP</workgroup>
 
     <keyword>MPLS</keyword>
     <keyword>IGP</keyword>
@@ -135,7 +135,7 @@
       acts as a consumer of this binding is the existing remedy for 
       this dilemma. </t>
 
-      <t>This document describes a single IS-IS protocol extension which allows
+      <t>This document describes a OSPFv2 and OSPFv3 protocol extension which allows
       routers to advertise MPLS label bindings within and beyond an IGP domain, and
       controlling inter-area distribution.
       </t> 
