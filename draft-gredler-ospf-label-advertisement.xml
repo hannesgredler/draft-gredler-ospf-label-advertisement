@@ -145,18 +145,19 @@
   <section title="Motivation, Rationale and Applicability">
     <t>Distributing MPLS labels using IS-IS has been described in
     <xref target="I-D.previdi-filsfils-isis-segment-routing"> Segment
-    Routing</xref>. The authors propose to re-use the IS-Reach TLVs (22,
-    23, 222) and Extended IP Prefix TLVs (135, 236) for carrying the label
-    information.  While retrofitting existing protocol machinery for new
+    Routing</xref>. The authors propose to re-use existing traffic-engineering
+    extensions for carrying the label information.
+    While retrofitting existing protocol machinery for new
     purposes is generally a good thing, <xref
     target="I-D.previdi-filsfils-isis-segment-routing">Segment
     Routing</xref> falls short of addressing some use-cases defined in
     <xref target="I-D.gredler-rtgwg-igp-label-advertisement"/>.
     </t>
 
-    <t>The dominant issue around re-using IS-Reach TLVs and the extended IP Prefix TLVs is that
-    both family of TLVs have existing protocol semantics, which might not be applicable
-    to advertising MPLS label switched paths in a generic fashion. These are specifically:</t>
+    <t>The dominant issue around re-using traffic-engineering extensions is that
+    both have existing protocol semantics, which might not be applicable
+    to advertising MPLS label switched paths in a generic fashion.
+    These are specifically:</t>
 
     <t><list style="symbols">
       <t>Bi-directionality semantics</t>
@@ -170,14 +171,15 @@
       'Bi-directionality semantics', affects the complexity around advertisement of unidirectional LSPs.
       Label advertisement of per-link labels or <xref
       target="I-D.previdi-filsfils-isis-segment-routing">'Adj-SIDs'</xref>
-      is done using IS-reach TLVs. Usually implementations need to have
+      is done by attaching label information to adjacency advertisment TLVs.
+      Usually implementations need to have
       an adjacency in 'Up' state prior to advertising this adjacency
-      as IS-reach TLV in its Link State PDUs (LSPs).
+      as TE-Link in its Link State advertisment.
       In order to advertise a per-link LSP an implementation first needs to have
       an adjacency, which only transitions to 'Up' state after passing the 3-way
       check. This implies bi-directionality. If an implementation wants to advertise
-      per-link LSPs to e.g. outside the IGP domain then it would need
-      to fake-up an adjacency. Bending existing IGP Adjacency code to support
+      per-link MPLS LSPs to e.g. outside the IGP domain then it would need
+      to fake-up an adjacency. Changing existing IGP Adjacency code to support
       such cases defeats the purpose of re-using existing functionality as there is
       not much common functionality to be shared.
       </t>
@@ -187,8 +189,8 @@
       <t>
 	LSPs pointing to a Node are advertised as <xref
 	target="I-D.previdi-filsfils-isis-segment-routing">'Node-SIDs'</xref>
-	using the family of extended IP Reach TLVs. That means that in order
-	to advertise a LSP, one is inheriting the semantics of advertising an
+	using IP Prefix containers. That means that in order
+	to advertise a MPLS LSP, one is inheriting the semantics of advertising an
 	IP path. Consider router A has got existing LSPs to its entire one-hop
 	neighborhood and is re-advertising those LSPs using IP reachability semantics.
 	Now we have two exact matching IP advertisements. One from the owning router
@@ -202,7 +204,7 @@
 
     <section title="Issue: Lack of 'path' notion">
       <t>
-	Both IS-Reach TLVs and IP Prefix Reachability TLVs have a
+	Both exisiting traffic-engineering extension containers have
 	limited semantics describing MPLS label-switched paths in the sense of
 	a 'path'.  Both encoding formats allow to express a pointer to some
 	specific router, but not to describe a MPLS label switched path
@@ -226,7 +228,7 @@
     <section title="Motivation">
       <t>
 	IGP advertisement of MPLS label switched paths requires a new set of
-	protocol semantics (path paradigm), which hardly can be expressed using
+	protocol semantics (undirectional paradigm, path paradigm), which hardly can be expressed using
 	the existing OSPF and OSPF-TE protocol semantics. This document describes protocol extensions
 	which allows generic advertisement of MPLS label switched paths in OSPF.
       </t>
