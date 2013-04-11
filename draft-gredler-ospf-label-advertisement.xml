@@ -227,7 +227,7 @@
       <t>
 	IGP advertisement of MPLS label switched paths requires a new set of
 	protocol semantics (path paradigm), which hardly can be expressed using
-	the existing OSPF protocol semantics. This document describes protocol extensions
+	the existing OSPF and OSPF-TE protocol semantics. This document describes protocol extensions
 	which allows generic advertisement of MPLS label switched paths in OSPF.
       </t>
     </section>
@@ -749,18 +749,17 @@
 
     <section anchor="IANA" title="IANA Considerations">
       <t>
-	This documents request allocation for the following TLVs and subTLVs.
+	This documents request allocation for one common OSPFv2 and OSPFv3
+	LSA Type and TLVs contained within.
       </t>
 
       <texttable anchor="iana_table" title="IANA allocations">
-	<ttcol align="center">PDU</ttcol>
+	<ttcol align="left">LSA</ttcol>
 	<ttcol align="left">TLV</ttcol>
-	<ttcol align="left">subTLV</ttcol>
-	<ttcol align="left">Type</ttcol>
-	<ttcol align="left">subType</ttcol>
+	<ttcol align="left">LSA Type</ttcol>
+	<ttcol align="left">TLV Type</ttcol>
 	<ttcol align="right">#Occurence</ttcol>
 
-	<c>LSP</c>
 	<c>MPLS Label</c>
 	<c></c>
 	<c>149</c>
@@ -768,24 +767,27 @@
 	<c>&gt;=0</c>
 
 	<c></c>
-	<c></c>
 	<c>IPv4 Prefix ERO</c>
 	<c></c>
 	<c>1</c>
 	<c>&gt;=0</c>
 
 	<c></c>
-	<c></c>
 	<c>IPv6 Prefix ERO</c>
 	<c></c>
 	<c>2</c>
 	<c>&gt;=0</c>
 
+	<c></c>
+	<c>Flags</c>
+	<c></c>
+	<c>3</c>
+	<c>0,1</c>
+
       </texttable>
 
       <t>
-	The MPLS Label TLV requires a new sub-registry.
-	Type value 149 has been assigned, with a starting sub-TLV
+	The MPLS Label LSA requires a new sub-registry, with a starting TLV
 	value of 1, and managed by Expert Review.
       </t>
 
