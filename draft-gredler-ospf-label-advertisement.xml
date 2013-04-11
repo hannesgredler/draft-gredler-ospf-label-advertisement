@@ -436,6 +436,8 @@
 	Prefix ERO list.
       </t>
 
+      <!-- FIXME add node about v4 usage in ospfv3 and vice versa -->
+
     <section title="IPv4 Prefix ERO TLV">
       <t>The IPv4 ERO TLV (Type 1) describes a path segment using IPv4 Prefix style of encoding.
       Its appearance and semantics have been borrowed from <xref target="RFC3209">
@@ -626,9 +628,9 @@
 	<t>If R1 would advertise a label &lt;N&gt; bound to a one-hop LSP
 	from R1 to R2 it would encode as follows:</t>
 		<t><list style="hangout">
-	  <t>TLV 149: MPLS label N, Flags {}:
+	  <t>LSA 149, LSA-ID &lt;N&gt;:
 	  <list style="hangout">
-	    <t>IPv4 Prefix ERO subTLV: 192.168.1.2/32, Strict</t>
+	    <t>IPv4 Prefix ERO TLV: 192.168.1.2/32, Strict</t>
 	  </list></t>
 	</list></t>	
       </section>
@@ -638,9 +640,9 @@
 	from R2 to R3, using the link #2 it would encode as follows</t>
 	
 	<t><list style="hangout">
-	  <t>TLV 149: MPLS label &lt;N&gt;, Flags {}:
+	  <t>LSA 149, LSA-ID &lt;N&gt;:
 	  <list style="hangout">
-	    <t>IPv4 Prefix ERO subTLV: 10.0.0.6/32, Strict</t>
+	    <t>IPv4 Prefix ERO TLV: 10.0.0.6/32, Strict</t>
 	  </list></t>
 	</list></t>	
       </section>
@@ -651,10 +653,10 @@
 	it would encode as follows</t>
 	
 	<t><list style="hangout">
-	  <t>TLV 149: MPLS label &lt;N&gt;, Flags {}:
+	  <t>LSA 149, LSA-ID &lt;N&gt;:
 	  <list style="hangout">
-	    <t>IPv4 Prefix ERO subTLV: 10.0.0.4/32, Strict</t>
-	    <t>IPv4 Prefix ERO subTLV: 192.168.1.6/32, Strict</t>
+	    <t>IPv4 Prefix ERO TLV: 10.0.0.4/32, Strict</t>
+	    <t>IPv4 Prefix ERO TLV: 192.168.1.6/32, Strict</t>
 	  </list></t>
 	</list></t>	
       </section>
@@ -665,9 +667,9 @@
 	<t>If R2 would re-advertise this binding in IS-IS it would encode as follows</t>
 	
 	<t><list style="hangout">
-	  <t>TLV 149: MPLS label &lt;N&gt;, Flags {}:
+	  <t>LSA 149, LSA-ID &lt;N&gt;:
 	  <list style="hangout">
-	    <t>IPv4 Prefix ERO subTLV: 172.16.0.0/12, Loose</t>
+	    <t>IPv4 Prefix ERO TLV: 172.16.0.0/12, Loose</t>
 	  </list></t>
 	</list></t>	
       </section>
@@ -679,35 +681,39 @@
 	<t>R2 encodes its two paths to R6 as follows:</t>
 	
 	<t><list style="hangout">
-	  <t>TLV 149: MPLS label &lt;N1&gt;, Flags {}:
+	  <t>LSA 149, LSA-ID &lt;N1&gt;:
 	  <list style="hangout">
-	    <t>IPv4 Prefix ERO subTLV: 192.168.1.3, Loose</t>
-	    <t>IPv4 Prefix ERO subTLV: 192.168.1.6, Loose</t>
+	    <t>IPv4 Prefix ERO TLV: 192.168.1.3, Loose</t>
+	    <t>IPv4 Prefix ERO TLV: 192.168.1.6, Loose</t>
+	    <t>Flags TLV: Down</t>
 	  </list></t>
-	  <t>TLV 149: MPLS label &lt;N2&gt;, Flags {}:
+	  <t>LSA 149, LSA-ID &lt;N2&gt;:
 	  <list style="hangout">
 	    <t>IPv4 Prefix ERO subTLV: 192.168.1.5, Loose</t>
 	    <t>IPv4 Prefix ERO subTLV: 192.168.1.6, Loose</t>
+	    <t>Flags TLV: Down</t>
 	  </list></t>
 	</list></t>	
 
 	<t>R5 encodes its two paths to R3 as follows:</t>
 	
 	<t><list style="hangout">
-	  <t>TLV 149: MPLS label &lt;N1&gt;, Flags {}:
+	  <t>LSA 149, LSA-ID &lt;N1&gt;:
 	  <list style="hangout">
 	    <t>IPv4 Prefix ERO subTLV: 192.168.1.2, Loose</t>
 	    <t>IPv4 Prefix ERO subTLV: 192.168.1.3, Loose</t>
+	    <t>Flags TLV: Down</t>
 	  </list></t>
-	  <t>TLV 149: MPLS label &lt;N2&gt;, Flags {}:
+	  <t>LSA 149, LSA-ID &lt;N2&gt;:
 	  <list style="hangout">
 	    <t>IPv4 Prefix ERO subTLV: 192.168.1.6, Loose</t>
 	    <t>IPv4 Prefix ERO subTLV: 192.168.1.3, Loose</t>
+	    <t>Flags TLV: Down</t>
 	  </list></t>
 	</list></t>	
 
 	<t>
-	  A receiving L1 router does see now all 4 paths and may decide
+	  A receiving non-backbone router does see now all 4 paths and may decide
 	  to load-balance across all or a subset of them.
 	</t>
       </section>
@@ -737,7 +743,8 @@
 	If local policy dictates that a given ABR router needs to
 	re-advertise a MPLS LSPs from one area to another then it
 	must prepend its "Traffic-Engineering-ID" as a loose hop in the
-	Prefix ERO TLV list.  
+	Prefix ERO TLV list. Furthermore it MUST append teh Flags TLV and
+	set the 'Down' Bit.
 	</t>
       </section>
 
