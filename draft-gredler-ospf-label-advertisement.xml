@@ -641,7 +641,7 @@
 
       </section>
 
-      <section title="One-hop LSP to an adjacent Router">
+      <section anchor="one-hop-lsp-internal-rtr" title="One-hop LSP to an adjacent Router">
 	<t>If R1 would advertise a label &lt;N&gt; bound to a one-hop LSP
 	from R1 to R2 it would encode as follows:</t>
 		<t><list style="hangout">
@@ -662,6 +662,24 @@
 	    <t>IPv4 Prefix ERO TLV: 10.0.0.6/32, Strict</t>
 	  </list></t>
 	</list></t>	
+      </section>
+
+      <section title="One-hop LSP to an adjacent external Router">
+	<t>If R3 would advertise a label &lt;N&gt; bound to a one-hop LSP
+	from R3 to R7 (which is outside of the IGP domain),
+	it would encode as follows:</t>
+		<t><list style="hangout">
+	  <t>LSA 149, LSA-ID &lt;N&gt;:
+	  <list style="hangout">
+	    <t>IPv4 Prefix ERO TLV: 192.168.1.7/32, Strict</t>
+	  </list></t>
+	</list></t>	
+
+	<t>
+	  As you can see the representation of an MPLS label crossing
+	  an external link is identical as an internal link <xref target="one-hop-lsp-internal-rtr"/>. 
+	</t>
+
       </section>
 
       <section title="Advertisement of an RSVP LSP">
