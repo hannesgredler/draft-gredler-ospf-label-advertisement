@@ -143,7 +143,7 @@
     </section>
 
   <section title="Motivation, Rationale and Applicability">
-    <t>Distributing MPLS labels using IS-IS has been described in
+    <t>Distributing MPLS labels in an IGP (IS-IS) has been described in
     <xref target="I-D.previdi-filsfils-isis-segment-routing"> Segment
     Routing</xref>. The authors propose to re-use existing traffic-engineering
     extensions for carrying the label information.
@@ -238,21 +238,13 @@
 
   <section title="OSPF MPLS LSA Format">
 
-    <section title="LSA Type">
-
-      <t>
-	This extension makes use of the Opaque LSAs <xref target="RFC5250"/>.
-      </t>
-
-      <t>
-	Three types of Opaque LSAs exist, each of which has a different
-	flooding scope. This proposal uses only Type 10 LSAs, which have an
-	area flooding scope.
-      </t>
+    <section title="Common LSA Type">
 
       <t>
 	One new LSA is defined, the MPLS Label LSA. This LSA advertises
-	MPLS labels along with their path information.
+	MPLS labels along with their path information. The LSA contains
+	more specific information encoded in TLVs. Those TLV extensions are
+	shared between the OSPFv2 and OPSFv3 protocols.
       </t>
     
     </section>
@@ -285,6 +277,16 @@
 
 
     <section title="OSPFv2 LSA Format Overview">
+
+      <t>
+	This extension makes use of the Opaque LSAs <xref target="RFC5250"/>.
+      </t>
+
+      <t>
+	Three types of Opaque LSAs exist, each of which has a different
+	flooding scope. This proposal uses only Type 10 LSAs, which have an
+	area flooding scope.
+      </t>
 
       <t>
 	The MPLS Label LSA for OSPFv2 starts with the standard OSPFv2 LSA header:
@@ -348,7 +350,7 @@
 0                   1                   2                   3
 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-|            LS age             |1|S12|          149            |
+|            LS age             |1|0|1|          149            |
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 |0|0|0|0|0|0|0|0|0|0|0|0|               MPLS Label              |
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
@@ -365,8 +367,16 @@
       </figure>
 
       <t>
-	XXX
+	The OSPFv3 'U' Bit will always be set such that routers which
+	do not understand the new MPLS Label LSA will store and forward
+	it further.
       </t>
+
+      <t>
+	In analogy to the OSPFv2 opaque LSA 10 the flooding scope will be
+	set to 'Area scoping'.
+      </t>
+
 
     </section>
 
@@ -418,13 +428,20 @@
       path segments describing the label switched path. This gets encoded
       in subsequent TLVs.  Since ERO style path notation allows to express
       pointers to link and node IP addresses. Now any label switched path,
-      sourced by any protocol can be described.
+      sourced by any protocol, can be described.
     </t>
 
     <t>
       An LSA contains one or more TLVs, describing properties of the advertised MPLS label.
     </t>
 
+    <t>
+      The following TLV extensions may be shared in both OSPV2 and OSPFv3.
+      Passing an IP adress of the other adress family (IPv4 in OPSFv3 or IPv6 in OSPFv2)
+      is possible as the information carried are related describing the hops
+      along a path. The receiver of this information is a protocol agnostic
+      path computation module.
+    </t>
 
 
     <section title="Prefix ERO TLVs">
@@ -437,8 +454,6 @@
 	switched path it MUST prepend the new segments path information to the
 	Prefix ERO list.
       </t>
-
-      <!-- FIXME add node about v4 usage in ospfv3 and vice versa -->
 
     <section title="IPv4 Prefix ERO TLV">
       <t>The IPv4 ERO TLV (Type 1) describes a path segment using IPv4 Prefix style of encoding.
