@@ -856,8 +856,6 @@
       <?rfc include="http://xml.resource.org/public/rfc/bibxml/reference.RFC.5036.xml"?>
       <?rfc include="http://xml.resource.org/public/rfc/bibxml/reference.RFC.5151.xml"?>
       <?rfc include="http://xml.resource.org/public/rfc/bibxml/reference.RFC.5250.xml"?>
-      <?rfc include="http://xml.resource.org/public/rfc/bibxml/reference.RFC.5302.xml"?>
-      <?rfc include="http://xml.resource.org/public/rfc/bibxml/reference.RFC.5311.xml"?>
     </references>
 
     <references title="Informative References">
