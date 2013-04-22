@@ -593,7 +593,7 @@
                     AS1                         :    AS 2
                                                 :
                      :                          :
-         Level 1     :     Level 2              :
+         Area 1      :      Area 0              :
                      :                          :
 +-----+           +-----+-IP3--IP4--+-----+     :
 | R1  +-IP1--IP2--+ R2  |           | R3  |     :
@@ -699,7 +699,7 @@
       <section title="Advertisement of an LDP LSP">
 	<t>Consider R2 that creates a LDP label binding for FEC 172.16.0.0./12
 	using label &lt;N&gt;.</t>
-	<t>If R2 would re-advertise this binding in IS-IS it would encode as follows</t>
+	<t>If R2 would re-advertise this label binding in OSPF it would encode as follows</t>
 	
 	<t><list style="hangout">
 	  <t>LSA 149, LSA-ID &lt;N&gt;:
@@ -786,7 +786,7 @@
     </section>
 
     <section anchor="Acknowledgements" title="Acknowledgements">
-      <t>Many thanks to Yakov Rekhter for his useful comments.</t>
+      <t>Many thanks to Yakov Rekhter and Shraddha Hedge for their useful comments.</t>
     </section>
 
     <section anchor="IANA" title="IANA Considerations">
