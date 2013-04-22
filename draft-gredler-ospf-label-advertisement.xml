@@ -10,7 +10,7 @@
 <?rfc inline="yes"?>
 <?rfc compact="yes" ?>
 <?rfc subcompact="no" ?>
-<rfc category="std" docName="draft-gredler-ospf-label-advertisement-00" ipr="trust200902">
+<rfc category="std" docName="draft-gredler-ospf-label-advertisement-01" ipr="trust200902">
 
   <!-- ***** FRONT MATTER ***** -->
 
@@ -75,7 +75,7 @@
       </address>
     </author>
 
-    <date day="12" month="April" year="2013"/>
+    <date day="23" month="April" year="2013"/>
 
     <area>Routing</area>
 
@@ -257,7 +257,7 @@
 	MPLS Label value as follows:
       </t>
 
-      <figure anchor="MPLS-LSAID-figure" title="MPLS LSA-ID format">
+      <figure anchor="MPLS-OSPFv2-LSAID-figure" title="OSPFv2 MPLS Label LSA-ID format">
 	<artwork>
 0                   1                   2                   3
 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
@@ -292,7 +292,7 @@
 	The MPLS Label LSA for OSPFv2 starts with the standard OSPFv2 LSA header:
       </t>
 
-      <figure anchor="MPLS-Label-OSPFv2-LSA-figure" title="MPLS Label OSPFv2 LSA format">
+      <figure anchor="MPLS-Label-OSPFv2-LSA-figure" title="OSPFv2 MPLS Label LSA format">
 	<artwork>
 0                   1                   2                   3
 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
@@ -320,7 +320,7 @@
 	of zero followed by the 20-Bit label MPLS Label value as follows:
       </t>
 
-      <figure anchor="MPLS-OSPFv3-LSAID-figure" title="MPLS OSPFv3 LSA-ID format">
+      <figure anchor="MPLS-Label-OSPFv3-LSAID-figure" title="OSPFv3 MPLS Label LSA-ID format">
 	<artwork>
 0                   1                   2                   3
 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
@@ -345,7 +345,7 @@
 	The MPLS Label LSA for OSPFv3 starts with the standard OSPFv3 LSA header:
       </t>
 
-      <figure anchor="MPLS-Label-OSPFv3-LSA-figure" title="MPLS Label OSPFv3 LSA format">
+      <figure anchor="MPLS-Label-OSPFv3-LSA-figure" title="OSPFv3 MPLS Label LSA format">
 	<artwork>
 0                   1                   2                   3
 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
@@ -778,7 +778,7 @@
 	If local policy dictates that a given ABR router needs to
 	re-advertise a MPLS LSPs from one area to another then it
 	must prepend its "Traffic-Engineering-ID" as a loose hop in the
-	Prefix ERO TLV list. Furthermore it MUST append teh Flags TLV and
+	Prefix ERO TLV list. Furthermore it MUST append the Flags TLV and
 	set the 'Down' Bit.
 	</t>
       </section>
