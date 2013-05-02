@@ -1148,63 +1148,53 @@
       </t>
 
       <texttable anchor="iana_table" title="IANA allocations">
-	<ttcol align="left">LSA</ttcol>
-	<ttcol align="left">TLV</ttcol>
 	<ttcol align="left">LSA Type</ttcol>
-	<ttcol align="left">TLV Type</ttcol>
+	<ttcol align="left">TLV</ttcol>
+	<ttcol align="center">TLV Type</ttcol>
 	<ttcol align="right">#Occurence</ttcol>
 
-	<c>MPLS Label</c>
-	<c></c>
 	<c>149</c>
+	<c></c>
 	<c></c>
 	<c>&gt;=0</c>
 
 	<c></c>
 	<c>IPv4 Prefix ERO</c>
-	<c></c>
 	<c>1</c>
 	<c>&gt;=0</c>
 
 	<c></c>
 	<c>IPv6 Prefix ERO</c>
-	<c></c>
 	<c>2</c>
 	<c>&gt;=0</c>
 
 	<c></c>
 	<c>IPv4 Prefix Bypass ERO</c>
-	<c></c>
 	<c>3</c>
 	<c>&gt;=0</c>
 
 	<c></c>
 	<c>IPv6 Prefix Bypass ERO</c>
-	<c></c>
 	<c>4</c>
 	<c>&gt;=0</c>
 
 	<c></c>
 	<c>Flags</c>
-	<c></c>
 	<c>5</c>
 	<c>0,1</c>
 
 	<c></c>
 	<c>All Router Block</c>
-	<c></c>
 	<c>6</c>
 	<c>>=0</c>
 
 	<c></c>
 	<c>All Router ID IPv4 Map</c>
-	<c></c>
 	<c>7</c>
 	<c>>=0</c>
 
 	<c></c>
 	<c>All Router ID IPv6 Map</c>
-	<c></c>
 	<c>8</c>
 	<c>>=0</c>
 
