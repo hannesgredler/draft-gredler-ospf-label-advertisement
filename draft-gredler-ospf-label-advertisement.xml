@@ -549,7 +549,7 @@
 
     <section title="Flags TLV">
       <t>
-	The Flags TLV (Type 3) describes Flags for further MPLS LSA treatment.
+	The Flags TLV (Type 5) describes Flags for further MPLS LSA treatment.
       </t>
 
       <t>
@@ -576,6 +576,171 @@
       </figure>
     </section> <!-- end Flags TLV -->
 
+    <section title="All Router Block TLV"
+	     anchor="all-rtr-block-tlv">
+      <t>
+	The 'All Router Block' TLV (Type 6) denominates the label block size of
+	an MPLS Label advertisement and its semantics to connect to all routers in
+	a given OSPF domain using a local assigned  <xref target="RFC3031"/>
+	label range.
+	The basic concept has been borrowed from <xref target="RFC4761"/>
+	which allows to advertise labels from multiple end-points using a single control-plane
+	message. The difference to <xref target="RFC4761"/> is that rather than advertising
+	where a particular packet came from (=source semantics), destination semantics
+	(where a particular packet will be going to) is advertised.
+      </t>
+
+      <t>
+	Along with each label block a router advertises one for more 'IDs'.
+	The 'ID' must be unique within a given domain.
+	The 'ID' serves as ordinal to determine the actual label value
+	inside the set of all advertised label ranges of a given router.
+	A receiving router uses the ordinal to determine the actual label value
+	in order to construct forwarding state to
+	a particular destination router.
+
+	The 'ID' is separately advertised using the TLVs described in 
+	<xref target="all-rtr-id-ipv4-map-tlv"/> and
+	<xref target="all-rtr-id-ipv6-map-tlv"/>.
+      </t>
+      
+      <t>
+	The ability to advertise more than one label block eases operational
+	procedures for increasing the number of supported routers within a domain.
+	For example consider a given domain has got support for &lt;M&gt; routers and runs
+	out of ID space. It simply advertises one more label block to cover additional
+	ordinals outside the range of the first label block.
+
+	An example of this is described in more detail in
+	<xref target="all-rtr-block-example"/>
+      </t>
+
+      <figure anchor="All-Router-Block-TLV-figure"
+	      title="All Router Block TLV format">
+	<artwork>
+0                   1                   2                   3
+0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|              Type             |             Length            |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|         Block Size            |             Reserved          |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+	</artwork> 
+      </figure>
+
+      <t>
+	The 'Block Size' value contains the size of the label advertisement.
+	The 'value determines the amount of reachable router endpoints
+	within a given domain.
+	It MUST contain a value greater or equal than two.
+      </t>
+
+      <t>
+	The 'Reserved' bits are for future use. They should be zero on
+	transmission and ignored on receipt.
+      </t>
+
+    </section> <!-- end 'All Routers Block TLV' -->
+
+    <section title="All Router ID IPv4 Map TLV"
+	     anchor="all-rtr-id-ipv4-map-tlv">
+      <t>
+	The 'All Router ID IPv4 Map' TLV (Type 7) maps an 'ID' to a given
+	stable transport IPv4 address. Its purpose is to associate
+	a given transport IPv4 IP address to the ordinal inside a label range
+	as described in <xref target="all-rtr-block-tlv"/>.
+      </t>
+
+      <t>
+	A router MAY advertise more than one 'ID' to 'IPv4 address'
+	mapping pair, in case it has more than one stable transport
+	IPv4 address.
+      </t>
+      
+      <figure anchor="All-Router-ID-IPv4-Map-TLV-figure"
+	      title="All Router ID IPv4 Map TLV format">
+	<artwork>
+0                   1                   2                   3
+0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|              Type             |             Length            |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|                     IPv4 Address (4 octets)                   |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|               ID              |           Reserved            |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+	</artwork> 
+      </figure>
+
+      <t>
+	The 'IPv4 address' contains stable IPv4 transport address of a given router.
+      </t>
+
+      <t>
+	The 'ID' contains the ordinal value of an advertising router inside the
+	set of all advertised label blocks of a given router.
+      </t>
+
+      <t>
+	The 'Reserved' bits are for future use. They should be zero on
+	transmission and ignored on receipt.
+      </t>
+
+    </section> <!-- end 'All Router ID IPv4 Map TLV' -->
+
+    <section title="All Router ID IPv6 Map TLV"
+	     anchor="all-rtr-id-ipv6-map-tlv">
+      <t>
+	The 'All Router ID IPv6 Map' TLV (Type 8) maps an 'ID' to a given
+	stable transport IPv6 address. Its purpose is to associate
+	a given transport IPv6 IP address to the ordinal inside a label range
+	as described in <xref target="all-rtr-block-tlv"/>.
+      </t>
+
+      <t>
+	A router MAY advertise more than one 'ID' to 'IPv6 address'
+	mapping pair, in case it has more than one stable transport
+	IPv6 address.
+      </t>
+      
+      <figure anchor="All-Router-ID-IPv6-Map-TLV-figure"
+	      title="All Router ID IPv6 Map TLV format">
+	<artwork>
+0                   1                   2                   3
+0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|              Type             |             Length            |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+| IPv6 Address (16 octets)                                      |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+| IPv6 Address (continued)                                      |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+| IPv6 Address (continued)                                      |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+| IPv6 Address (continued)                                      |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|               ID              |           Reserved            |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+	</artwork> 
+      </figure>
+
+      <t>
+	The 'IPv6 address' contains the stable IPv6 transport address
+	of a given router.
+      </t>
+
+      <t>
+	The 'ID' contains the ordinal value of an advertising router inside the
+	set of all advertised label blocks of a given router.
+      </t>
+
+      <t>
+	The 'Reserved' bits are for future use. They should be zero on
+	transmission and ignored on receipt.
+      </t>
+
+    </section> <!-- end 'All Router ID IPv6 Map TLV' -->
+
 
   
   </section>
@@ -590,25 +755,27 @@
         <figure anchor="sample-topology" title="Sample Topology">
           <artwork>
 
-                    AS1                         :    AS 2
-                                                :
-                     :                          :
-         Area 1      :      Area 0              :
-                     :                          :
-+-----+           +-----+-IP3--IP4--+-----+     :
-| R1  +-IP1--IP2--+ R2  |           | R3  |     :
-+--+--+           +--+--+-IP5--IP6--+--+--+-IP15-IP16-
-   |                 |                 |        :     \
-  IP3               IP7               IP13      :   +--+--+
-   |                 |                 |        :   |  R7 |
-  IP4               IP8               IP14      :   +--+--+
-   |                 |                 |        :     /
-+--+--+           +--+--+           +--+--+-IP17-IP18-
-|  R4 +-IP19-IP20-+ R5  |-IP11-IP12-| R6  |     :
-+-----+           +-----+           +-----+     :
-                     :                          :
-                     :                          :
-                     :                          :
+                      AS1                           :    AS 2
+                                                    :
+                       :                            :
+         Area 1        :      Area 0                :
+                       :                            :
++-----+             +-----+-IP3--1-IP4--+-----+     :
+| R1  +-IP1--1-IP2--+ R2  |             | R3  |     :
++--+--+             +--+--+-IP5--3-IP6--+--+--+-IP15-IP16- 
+   |                   |                   |        :     \
+  IP3                 IP7                IP13       :      \
+   |                   |                   |        :    +--+--+
+   1                   1                   1        :    |  R7 |
+   |                   |                   |        :    +--+--+
+  IP4                 IP8                IP14       :      /
+   |                   |                   |        :     /
++--+--+             +--+--+             +--+--+-IP17-IP18- 
+|  R4 +-IP19-2-IP20-+ R5  |-IP11-2-IP12-| R6  |     :
++-----+             +-----+             +-----+     :
+                       :                            :
+                       :                            :
+                       :                            :
 	  </artwork>
 	</figure>
 
@@ -637,6 +804,11 @@
 	    <t>R5 to R6 link: 10.0.0.11, 10.0.0.12</t>
 	    <t>R6 to R7 link: 10.0.0.17, 10.0.0.18</t>
 	  </list></t>	
+
+	  <t>
+	    The IGP link metrics are displayed in the middle of the link.
+	    All of them are assumed to be bi-directional.
+	  </t>
 	</section>
 
       </section>
@@ -677,7 +849,8 @@
 
 	<t>
 	  As you can see the representation of an MPLS label crossing
-	  an external link is identical as an internal link <xref target="one-hop-lsp-internal-rtr"/>. 
+	  an external link is identical as an internal link
+	  <xref target="one-hop-lsp-internal-rtr"/>. 
 	</t>
 
       </section>
@@ -753,12 +926,97 @@
 	</t>
       </section>
 
+      <section title="Advertisement of SPT labels using 'All Router Block' TLV"
+	       anchor="all-rtr-block-example">
+
+	<t>
+	  All routers within a given area MUST advertise their Label Blocks
+	  along with an 'ID'.
+	</t>
+
+	<t>If R2 would advertise a label block &lt;N1&gt; with a size of 10,
+	declaring SPT label forwarding support to all routers within a given domain,
+	it would encode as follows:</t>
+		<t><list style="hangout">
+	  <t>LSA 149, LSA-ID &lt;N1&gt;:
+	  <list style="hangout">
+	    <t>All Router Block TLV: Block Size 10 </t>
+	    <t>All Router ID IPv4 Map TLV: ID 2, 192.168.1.2</t>
+	  </list></t>
+	</list></t>	
+
+	<t>If R3 would advertise a label block &lt;N2&gt; with a size of 10,
+	declaring SPT label forwarding support to all routers within a given domain,
+	it would encode as follows:</t>
+		<t><list style="hangout">
+	  <t>LSA 149, LSA-ID &lt;N2&gt;:
+	  <list style="hangout">
+	    <t>All Router Block TLV: Block Size 10 </t>
+	    <t>All Router ID IPv4 Map TLV: ID 3, 192.168.1.3</t>
+	  </list></t>
+	</list></t>	
+
+	<t>If R5 would advertise a label block &lt;N3&gt; with a size of 10,
+	declaring SPT label forwarding support to all routers within a given domain,
+	it would encode as follows:</t>
+		<t><list style="hangout">
+	  <t>LSA 149, LSA-ID &lt;N3&gt;:
+	  <list style="hangout">
+	    <t>All Router Block TLV: Block Size 10 </t>
+	    <t>All Router ID IPv4 Map TLV: ID 5, 192.168.1.5</t>
+	  </list></t>
+	</list></t>	
+
+	<t>If R6 would advertise a label block &lt;N4&gt; with a size of 10,
+	declaring SPT label forwarding support to all routers within a given domain,
+	it would encode as follows:</t>
+		<t><list style="hangout">
+	  <t>LSA 149, LSA-ID &lt;N4&gt;:
+	  <list style="hangout">
+	    <t>All Router Block TLV: Block Size 10 </t>
+	    <t>All Router ID IPv4 Map TLV: ID 6, 192.168.1.6</t>
+	  </list></t>
+	</list></t>	
+
+	<t>
+	  Consider now R2 constructing a SPT label for R6. R2s SPT to R6 is
+	  {R2, IP4, R3, R6}. R2 first determines if its downstream router
+	  (R3) has advertised a label-block. Since R3 has advertised a label block
+	  'N2' and it has received R6 'ID' of 6 it will be picking the 6th label
+	  value inside the advertised range of its downstream neighbor.
+	  Specifically R2 MUST be program a
+	  MPLS SWAP for its own label range Label(N1+6) to Label(N2+6),
+	  NH 10.0.0.4 into its MPLS transit RIB.
+	  Furthermore R2 MAY program a MPLS PUSH operation for IP 192.168.1.6 to
+	  Label (N2+6), NH 10.0.0.04 into its IPv4 tunnel RIB.
+	</t>
+
+	<t>
+	  Next walk down to R3, which is
+	  the next router on the SPT tree towards R6.
+
+	  R3s SPT to R6 is {R3, R6}.
+	  R3 determines if its downstream router
+	  (R6) has advertised a label-block. Since R6 has advertised a label block
+	  'N4' and it has received R6 'ID' of 6 it will be picking the 6th label
+	  value inside the advertised range of its downstream neighbor.
+
+	  Since R3 is the penultimate router to R6 it MUST program a
+	  MPLS POP for its own label range Label(N2+6) NH 10.0.0.14 into
+	  its MPLS transit RIB.
+	  Furthermore R3 MAY program a MPLS NOP for IP 192.168.1.6, 
+	  NH 10.0.0.14 into its IPv4 tunnel RIB.
+	</t>
+
+      </section>
+
     </section> <!-- end 'Advertising Label Examples' -->
 
     <section title="Inter Area Protocol Procedures">
       <section title="Applicability">
 	<t>
-	  Propagation of a MPLS LSP across an area boundary is a local policy decision.
+	  Propagation of a MPLS LSPs and MPLS Block LSPs across
+	  an area boundary is a local policy decision.
 	</t>
       </section>
 
@@ -774,13 +1032,28 @@
       </section>
 
       <section title="Control plane operations">
-	<t>
-	If local policy dictates that a given ABR router needs to
-	re-advertise a MPLS LSPs from one area to another then it
-	must prepend its "Traffic-Engineering-ID" as a loose hop in the
-	Prefix ERO TLV list. Furthermore it MUST append the Flags TLV and
-	set the 'Down' Bit.
-	</t>
+	<section title="MPLS Label operations">
+	  <t>
+	    If local policy dictates that a given ABR router needs to
+	    re-advertise MPLS LSPs from one area to another then it
+	    must prepend its "Traffic-Engineering-ID" as a loose hop in the
+	    Prefix ERO TLV list. Furthermore it MUST append the Flags TLV and
+	    set the 'Down' Bit.
+	  </t>
+	</section>
+
+	<section title="MPLS Label Block operations">
+	  <t>
+	    If local policy dictates that a given ABR router advertises
+	    its 'All Router Block' into another area, then it also
+	    MUST re-advertise all known 'ID' ordinals (again gated by policy)
+	    to the respective other area. Without knowledge of all 'ID's
+	    in the network no router is able to construct SPT label switched paths.
+	    Furthermore an ABR MUST append the Flags TLV and
+	    set the 'Down' Bit for all re-advertised 'CE' IDs.
+	  </t>
+	</section>
+
       </section>
 
     </section>
@@ -823,8 +1096,26 @@
 	<c></c>
 	<c>Flags</c>
 	<c></c>
-	<c>3</c>
+	<c>5</c>
 	<c>0,1</c>
+
+	<c></c>
+	<c>All Router Block</c>
+	<c></c>
+	<c>6</c>
+	<c>>=0</c>
+
+	<c></c>
+	<c>All Router ID IPv4 Map</c>
+	<c></c>
+	<c>7</c>
+	<c>>=0</c>
+
+	<c></c>
+	<c>All Router ID IPv6 Map</c>
+	<c></c>
+	<c>8</c>
+	<c>>=0</c>
 
       </texttable>
 
@@ -849,10 +1140,12 @@
 
     <references title="Normative References">
       <?rfc include="http://xml.resource.org/public/rfc/bibxml/reference.RFC.2119.xml"?>
+      <?rfc include="http://xml.resource.org/public/rfc/bibxml/reference.RFC.3031.xml"?>
       <?rfc include="http://xml.resource.org/public/rfc/bibxml/reference.RFC.3107.xml"?>
       <?rfc include="http://xml.resource.org/public/rfc/bibxml/reference.RFC.3209.xml"?>
       <?rfc include="http://xml.resource.org/public/rfc/bibxml/reference.RFC.3630.xml"?>
       <?rfc include="http://xml.resource.org/public/rfc/bibxml/reference.RFC.4206.xml"?>
+      <?rfc include="http://xml.resource.org/public/rfc/bibxml/reference.RFC.4761.xml"?>
       <?rfc include="http://xml.resource.org/public/rfc/bibxml/reference.RFC.5036.xml"?>
       <?rfc include="http://xml.resource.org/public/rfc/bibxml/reference.RFC.5151.xml"?>
       <?rfc include="http://xml.resource.org/public/rfc/bibxml/reference.RFC.5250.xml"?>
