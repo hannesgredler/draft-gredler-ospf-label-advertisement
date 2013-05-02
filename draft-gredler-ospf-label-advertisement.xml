@@ -75,7 +75,7 @@
       </address>
     </author>
 
-    <date day="23" month="April" year="2013"/>
+    <date day="2" month="May" year="2013"/>
 
     <area>Routing</area>
 
@@ -546,6 +546,85 @@
     </section> <!-- end IPv6 Prefix ERO TLV -->
 
     </section>
+
+	<section title="IPv4 Prefix Bypass ERO TLV">
+	  <t>
+	    The IPv4 Bypass ERO TLV (Type 3) describes a Bypass LSP path segment
+	    using IPv4 Prefix style of encoding.
+	    Its appearance and semantics have been borrowed from <xref target="RFC3209">
+	    Section 4.3.3.2</xref>.
+	  </t>
+
+	  <t>
+	    The 'Prefix Length' field contains the length of the prefix in bits.
+	  </t>
+
+	  <t>
+	    The 'L' bit in the TLV is a one-bit attribute.  If the L bit is
+	    set, then the value of the attribute is 'loose.'  Otherwise, the
+	    value of the attribute is 'strict.'
+	  </t>
+
+	  <t>
+	    The 'Reserved' bits are for future use. They should be zero on
+	    transmission and ignored on receipt.
+	  </t>
+
+	  <figure anchor="IPv4-Prefix-Bypass-ERO-TLV-figure"
+		  title="IPv4 Prefix Bypass ERO TLV format">
+	    <artwork>
+0                   1                   2                   3
+0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|              Type             |             Length            |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|                     IPv4 Address (4 octets)                   |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+| Prefix Length |L|                   Reserved                  | 
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+	    </artwork> 
+	  </figure>
+	</section> <!-- end IPv4 Prefix Bypass ERO TLV -->
+
+	<section title="IPv6 Prefix Bypass ERO TLV">
+	  <t>
+	    The IPv6 ERO TLV (Type 4) describes a Bypass LSP path segment
+	    using IPv6 Prefix style of encoding.
+	    Its appearance and semantics have been borrowed from <xref target="RFC3209">
+	    Section 4.3.3.3</xref>.
+	  </t>
+
+	  <t>
+	    The 'Prefix Length' field contains the length of the prefix in bits.
+	  </t>
+
+	  <t>
+	    The 'L' bit in the subTLV is a one-bit attribute.  If the L bit is
+	    set, then the value of the attribute is 'loose.'  Otherwise, the
+	    value of the attribute is 'strict.'
+	  </t>
+
+	  <figure anchor="IPv6-Prefix-Bypass-ERO-TLV-figure"
+		  title="IPv6 Prefix Bypass ERO TLV format">
+	    <artwork>
+0                   1                   2                   3
+0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|              Type             |             Length            |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+| IPv6 Address (16 octets)                                      |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+| IPv6 Address (continued)                                      |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+| IPv6 Address (continued)                                      |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+| IPv6 Address (continued)                                      |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+| Prefix Length |L|                   Reserved                  | 
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+	    </artwork>
+	  </figure>
+	</section> <!-- end IPv6 Prefix Bypass ERO TLV -->
 
     <section title="Flags TLV">
       <t>
@@ -1091,6 +1170,18 @@
 	<c>IPv6 Prefix ERO</c>
 	<c></c>
 	<c>2</c>
+	<c>&gt;=0</c>
+
+	<c></c>
+	<c>IPv4 Prefix Bypass ERO</c>
+	<c></c>
+	<c>3</c>
+	<c>&gt;=0</c>
+
+	<c></c>
+	<c>IPv6 Prefix Bypass ERO</c>
+	<c></c>
+	<c>4</c>
 	<c>&gt;=0</c>
 
 	<c></c>
