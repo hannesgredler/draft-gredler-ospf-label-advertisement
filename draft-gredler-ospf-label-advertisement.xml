@@ -75,7 +75,7 @@
       </address>
     </author>
 
-    <date day="2" month="May" year="2013"/>
+    <date day="5" month="May" year="2013"/>
 
     <area>Routing</area>
 
@@ -626,7 +626,7 @@
 	  </figure>
 	</section> <!-- end IPv6 Prefix Bypass ERO TLV -->
 
-    <section title="Flags TLV">
+    <section anchor="flags_tlv" title="Flags TLV">
       <t>
 	The Flags TLV (Type 5) describes Flags for further MPLS LSA treatment.
       </t>
@@ -661,8 +661,20 @@
 	The 'All Router Block' TLV (Type 6) denominates the label block size of
 	an MPLS Label advertisement and its semantics to connect to all routers in
 	a given OSPF domain using a local assigned  <xref target="RFC3031"/>
-	label range.
-	The basic concept has been borrowed from <xref target="RFC4761"/>
+	label range. Note that the actual mapping of a router within the label range
+	is done using the TLVs described in <xref target="all-rtr-id-ipv4-map-tlv"/>
+	and <xref target="all-rtr-id-ipv6-map-tlv"/>. Since generation of
+	an IPv4 or IPv6 Map TLV is a local policy decision, it might be the case
+	that connectivity is provided not to 'All' but rather a subset of 'All'
+	routers. Keeping policy decisions aside, for simplicity reasons,
+	assume that All Routers in a domain do generate either the
+	'All Router ID IPv4 Map' or
+	'All Router ID IPv6 Map' TLVs and therefore all routers
+	desire construction of a Label switched path from every source router
+	in the network.
+
+	The basic concept of using label blocks to provide connectivity
+	to a set of routers has been borrowed from <xref target="RFC4761"/>
 	which allows to advertise labels from multiple end-points using a single control-plane
 	message. The difference to <xref target="RFC4761"/> is that rather than advertising
 	where a particular packet came from (=source semantics), destination semantics
@@ -702,7 +714,7 @@
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 |              Type             |             Length            |
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-|         Block Size            |             Reserved          |
+|         Block Size            | Algo  | Reserved| Topology-ID |
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 	</artwork> 
       </figure>
@@ -712,11 +724,44 @@
 	The 'value determines the amount of reachable router endpoints
 	within a given domain.
 	It MUST contain a value greater or equal than two.
+	Note that the label base is inferred from the LSA-ID in the LSA header.
+	For example if a router wants to advertise a label range of 5000-5099 then
+	it would need to generate a LSA-ID of 5000 (= 0.0.19.136) and  a Block
+	Size of 100.
+      </t>
+      
+      <t>
+	The 'Algo' value denominates the path computation algorithm in order
+	to calculate the forwarding topology. The basic SPF algorithm
+	has an assigned 'Algo' code point of zero. The purpose of the
+	'Algo' field is to extend the notion of Label Block Signaling
+	to arbitrary algorithms like for example 'MRT'
+	(<xref target="I-D.ietf-rtgwg-mrt-frr-architecture"/>.
+	Advertised Label Blocks with an unknown, unsupported or non-configured
+	algorithm MUST be silently ignored.
       </t>
 
       <t>
 	The 'Reserved' bits are for future use. They should be zero on
 	transmission and ignored on receipt.
+      </t>
+
+      <t>
+	The 'Topology-ID' field contains the Multi Topology ID
+	(<xref target="RFC4915"/>) for which the advertised Label Block
+	does apply. The basic IPv4 unicast Topology has an assigned
+	'Topology-ID' code point of zero.
+	Advertised Label Blocks with an unknown, unsupported or non-configured
+	Topology-ID MUST be silently ignored.
+      </t>
+
+      <t>
+	An LSA containing the 'All Router Block' TLV MUST only contain
+	the Flags TLV (<xref target="flags_tlv"/>, the 
+	'All Router IPv4 Map' TLV
+	(<xref target="all-rtr-id-ipv4-map-tlv"/>)
+	or the 'All Router IPv6 Map' TLV
+	(<xref target="all-rtr-id-ipv6-map-tlv"/>).
       </t>
 
     </section> <!-- end 'All Routers Block TLV' -->
@@ -1227,6 +1272,7 @@
       <?rfc include="http://xml.resource.org/public/rfc/bibxml/reference.RFC.3630.xml"?>
       <?rfc include="http://xml.resource.org/public/rfc/bibxml/reference.RFC.4206.xml"?>
       <?rfc include="http://xml.resource.org/public/rfc/bibxml/reference.RFC.4761.xml"?>
+      <?rfc include="http://xml.resource.org/public/rfc/bibxml/reference.RFC.4915.xml"?>
       <?rfc include="http://xml.resource.org/public/rfc/bibxml/reference.RFC.5036.xml"?>
       <?rfc include="http://xml.resource.org/public/rfc/bibxml/reference.RFC.5151.xml"?>
       <?rfc include="http://xml.resource.org/public/rfc/bibxml/reference.RFC.5250.xml"?>
@@ -1235,6 +1281,8 @@
     <references title="Informative References">
       <?rfc include="http://xml.resource.org/public/rfc/bibxml3/reference.I-D.draft-gredler-rtgwg-igp-label-advertisement-03.xml"?>
       <?rfc include="http://xml.resource.org/public/rfc/bibxml3/reference.I-D.draft-previdi-filsfils-isis-segment-routing-02.xml"?>
+      <?rfc include="http://xml.resource.org/public/rfc/bibxml3/reference.I-D.draft-ietf-rtgwg-mrt-frr-architecture-02.xml"?>
+
     </references>
 
   </back>
