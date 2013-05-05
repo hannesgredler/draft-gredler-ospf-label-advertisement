@@ -940,9 +940,9 @@
       <section anchor="one-hop-lsp-internal-rtr" title="One-hop LSP to an adjacent Router">
 	<t>If R1 would advertise a label &lt;N&gt; bound to a one-hop LSP
 	from R1 to R2 it would encode as follows:</t>
-		<t><list style="hangout">
+	<t><list>
 	  <t>LSA 149, LSA-ID &lt;N&gt;:
-	  <list style="hangout">
+	  <list>
 	    <t>IPv4 Prefix ERO TLV: 192.168.1.2/32, Strict</t>
 	  </list></t>
 	</list></t>	
@@ -952,9 +952,9 @@
 	<t>If R2 would advertise a label &lt;N&gt;bound to a one-hop LSP
 	from R2 to R3, using the link #2 it would encode as follows</t>
 	
-	<t><list style="hangout">
+	<t><list>
 	  <t>LSA 149, LSA-ID &lt;N&gt;:
-	  <list style="hangout">
+	  <list>
 	    <t>IPv4 Prefix ERO TLV: 10.0.0.6/32, Strict</t>
 	  </list></t>
 	</list></t>	
@@ -964,9 +964,9 @@
 	<t>If R3 would advertise a label &lt;N&gt; bound to a one-hop LSP
 	from R3 to R7 (which is outside of the IGP domain),
 	it would encode as follows:</t>
-		<t><list style="hangout">
+	<t><list>
 	  <t>LSA 149, LSA-ID &lt;N&gt;:
-	  <list style="hangout">
+	  <list>
 	    <t>IPv4 Prefix ERO TLV: 192.168.1.7/32, Strict</t>
 	  </list></t>
 	</list></t>	
@@ -984,9 +984,9 @@
 	<t>If R2 would advertise a label &lt;N&gt; bound to the RSVP LSP named 'R2-to-R6',
 	it would encode as follows</t>
 	
-	<t><list style="hangout">
+	<t><list>
 	  <t>LSA 149, LSA-ID &lt;N&gt;:
-	  <list style="hangout">
+	  <list>
 	    <t>IPv4 Prefix ERO TLV: 10.0.0.4/32, Strict</t>
 	    <t>IPv4 Prefix ERO TLV: 192.168.1.6/32, Strict</t>
 	  </list></t>
@@ -998,9 +998,9 @@
 	using label &lt;N&gt;.</t>
 	<t>If R2 would re-advertise this label binding in OSPF it would encode as follows</t>
 	
-	<t><list style="hangout">
+	<t><list>
 	  <t>LSA 149, LSA-ID &lt;N&gt;:
-	  <list style="hangout">
+	  <list>
 	    <t>IPv4 Prefix ERO TLV: 172.16.0.0/12, Loose</t>
 	  </list></t>
 	</list></t>	
@@ -1012,15 +1012,15 @@
 
 	<t>R2 encodes its two paths to R6 as follows:</t>
 	
-	<t><list style="hangout">
+	<t><list>
 	  <t>LSA 149, LSA-ID &lt;N1&gt;:
-	  <list style="hangout">
+	  <list>
 	    <t>IPv4 Prefix ERO TLV: 192.168.1.3, Loose</t>
 	    <t>IPv4 Prefix ERO TLV: 192.168.1.6, Loose</t>
 	    <t>Flags TLV: Down</t>
 	  </list></t>
 	  <t>LSA 149, LSA-ID &lt;N2&gt;:
-	  <list style="hangout">
+	  <list>
 	    <t>IPv4 Prefix ERO subTLV: 192.168.1.5, Loose</t>
 	    <t>IPv4 Prefix ERO subTLV: 192.168.1.6, Loose</t>
 	    <t>Flags TLV: Down</t>
@@ -1029,15 +1029,15 @@
 
 	<t>R5 encodes its two paths to R3 as follows:</t>
 	
-	<t><list style="hangout">
+	<t><list>
 	  <t>LSA 149, LSA-ID &lt;N1&gt;:
-	  <list style="hangout">
+	  <list>
 	    <t>IPv4 Prefix ERO subTLV: 192.168.1.2, Loose</t>
 	    <t>IPv4 Prefix ERO subTLV: 192.168.1.3, Loose</t>
 	    <t>Flags TLV: Down</t>
 	  </list></t>
 	  <t>LSA 149, LSA-ID &lt;N2&gt;:
-	  <list style="hangout">
+	  <list>
 	    <t>IPv4 Prefix ERO subTLV: 192.168.1.6, Loose</t>
 	    <t>IPv4 Prefix ERO subTLV: 192.168.1.3, Loose</t>
 	    <t>Flags TLV: Down</t>
@@ -1061,9 +1061,9 @@
 	<t>If R2 would advertise a label block &lt;N1&gt; with a size of 10,
 	declaring SPT label forwarding support to all routers within a given domain,
 	it would encode as follows:</t>
-		<t><list style="hangout">
+	<t><list>
 	  <t>LSA 149, LSA-ID &lt;N1&gt;:
-	  <list style="hangout">
+	  <list>
 	    <t>All Router Block TLV: Block Size 10 </t>
 	    <t>All Router ID IPv4 Map TLV: ID 2, 192.168.1.2</t>
 	  </list></t>
@@ -1072,9 +1072,9 @@
 	<t>If R3 would advertise a label block &lt;N2&gt; with a size of 10,
 	declaring SPT label forwarding support to all routers within a given domain,
 	it would encode as follows:</t>
-		<t><list style="hangout">
+	<t><list>
 	  <t>LSA 149, LSA-ID &lt;N2&gt;:
-	  <list style="hangout">
+	  <list>
 	    <t>All Router Block TLV: Block Size 10 </t>
 	    <t>All Router ID IPv4 Map TLV: ID 3, 192.168.1.3</t>
 	  </list></t>
@@ -1083,9 +1083,9 @@
 	<t>If R5 would advertise a label block &lt;N3&gt; with a size of 10,
 	declaring SPT label forwarding support to all routers within a given domain,
 	it would encode as follows:</t>
-		<t><list style="hangout">
+	<t><list>
 	  <t>LSA 149, LSA-ID &lt;N3&gt;:
-	  <list style="hangout">
+	  <list>
 	    <t>All Router Block TLV: Block Size 10 </t>
 	    <t>All Router ID IPv4 Map TLV: ID 5, 192.168.1.5</t>
 	  </list></t>
@@ -1094,9 +1094,9 @@
 	<t>If R6 would advertise a label block &lt;N4&gt; with a size of 10,
 	declaring SPT label forwarding support to all routers within a given domain,
 	it would encode as follows:</t>
-		<t><list style="hangout">
+	<t><list>
 	  <t>LSA 149, LSA-ID &lt;N4&gt;:
-	  <list style="hangout">
+	  <list>
 	    <t>All Router Block TLV: Block Size 10 </t>
 	    <t>All Router ID IPv4 Map TLV: ID 6, 192.168.1.6</t>
 	  </list></t>
@@ -1247,7 +1247,7 @@
 
       <t>
 	The MPLS Label LSA requires a new sub-registry, with a starting TLV
-	value of 1, and managed by Expert Review.
+	value of 1, and managed by IETF consensus.
       </t>
 
     </section>
