@@ -888,11 +888,11 @@
 | R1  +-IP1--1-IP2--+ R2  |             | R3  |     :
 +--+--+             +--+--+-IP5--3-IP6--+--+--+-IP15-IP16- 
    |                   |                   |        :     \
-  IP3                 IP7                IP13       :      \
+  IP9                 IP7                IP13       :      \
    |                   |                   |        :    +--+--+
    1                   1                   1        :    |  R7 |
    |                   |                   |        :    +--+--+
-  IP4                 IP8                IP14       :      /
+ IP10                 IP8                IP14       :      /
    |                   |                   |        :     /
 +--+--+             +--+--+             +--+--+-IP17-IP18- 
 |  R4 +-IP19-2-IP20-+ R5  |-IP11-2-IP12-| R6  |     :
@@ -918,15 +918,15 @@
 	<section title="Link IP addresses">
 	  <t><list style="symbols">
 	    <t>R1 to R2 link: 10.0.0.1, 10.0.0.2</t>
-	    <t>R1 to R4 link: 10.0.0.3, 10.0.0.4</t>
-	    <t>R2 to R3 link #1: 10.0.0.5, 10.0.0.6</t>
-	    <t>R2 to R3 link #2: 10.0.0.7, 10.0.0.8</t>
-	    <t>R2 to R5 link: 10.0.0.9, 10.0.0.10</t>
+	    <t>R1 to R4 link: 10.0.0.9, 10.0.0.10</t>
+	    <t>R2 to R3 link #1: 10.0.0.3, 10.0.0.4</t>
+	    <t>R2 to R3 link #2: 10.0.0.5, 10.0.0.6</t>
+	    <t>R2 to R5 link: 10.0.0.7, 10.0.0.8</t>
 	    <t>R3 to R6 link: 10.0.0.13, 10.0.0.14</t>
 	    <t>R3 to R7 link: 10.0.0.15, 10.0.0.16</t>
-	    <t>R4 to R5 link: 10.0.0.17, 10.0.0.18</t>
+	    <t>R4 to R5 link: 10.0.0.19, 10.0.0.20</t>
 	    <t>R5 to R6 link: 10.0.0.11, 10.0.0.12</t>
-	    <t>R6 to R7 link: 10.0.0.19, 10.0.0.20</t>
+	    <t>R6 to R7 link: 10.0.0.17, 10.0.0.18</t>
 	  </list></t>	
 
 	  <t>
@@ -1112,7 +1112,7 @@
 	  MPLS SWAP for its own label range Label(N1+6) to Label(N2+6),
 	  NH 10.0.0.4 into its MPLS transit RIB.
 	  Furthermore R2 MAY program a MPLS PUSH operation for IP 192.168.1.6 to
-	  Label (N2+6), NH 10.0.0.04 into its IPv4 tunnel RIB.
+	  Label (N2+6), NH 10.0.0.4 into its IPv4 tunnel RIB.
 	</t>
 
 	<t>
