@@ -724,12 +724,13 @@
       <t>
 	The ability to advertise more than one label block eases operational
 	procedures for increasing the number of supported routers within a domain.
-	For example consider a given domain has got support for &lt;M&gt; routers and runs
-	out of ID space. It simply advertises one more label block to cover additional
+	For example consider a given domain has got support for &lt;M&gt; routers
+	and runs out of ID space.
+	It simply advertises one more label block to cover additional
 	ordinals outside the range of the first label block.
 
-	An example of this is described in more detail in
-	<xref target="all-rtr-block-example"/>
+	An example of label-block expansion is described in more detail in
+	<xref target="all-rtr-block-resize-example"/>
       </t>
 
       <figure anchor="All-Router-Block-TLV-figure"
@@ -1159,6 +1160,55 @@
 	</t>
 
       </section>
+
+      <section title="Expansion of an 'All Router Block' TLV"
+	       anchor="all-rtr-block-resize-example">
+
+	<t>
+	  All routers within a given area MUST advertise their Label Blocks
+	  along with an 'ID'. Now assume that the initial label block
+	  size assignment is too small to support all routers which
+	  generate an ordinal within an IGP domain.
+	  Consider the seven routers in <xref target="sample-topology"/>,
+	  and assume that R7 advertises a new ID '15' using an
+	  'All Router ID Map' TLV. ID '15' is outside of the range
+	  of '10' as per the previous example in 
+	  <xref target="all-rtr-block-example"/>.
+
+	  Now all the routers in an IGP domain need to advertise one
+	  more label block in order to map the ID '15' to an actual
+	  label value.
+	</t>
+
+	<t>All routers would advertise in addition to their
+	label block &lt;N&gt; with a size of 10, a second label block &lt;N2&gt;
+	with a size sufficient enough, that the new ordinal can get covered.
+	In this example the same block size 10 is used also for the
+	second label block. For example router R2 would advertise the
+	following label bindings.
+	</t>
+
+	<t><list>
+	  <t>LSA 149: LSA-ID &lt;N1&gt;:
+	  <list>
+	    <t>All Router Block TLV: Block Size 10, Algo 0, Topology 0</t>
+	    <t>All Router ID IPv4 Map TLV: ID 2, 192.168.1.2</t>
+	  </list></t>
+	  <t>LSA 149: LSA-ID &lt;N2&gt;:
+	  <list>
+	    <t>All Router Block TLV: Block Size 10, Algo 0, Topology 0</t>
+	  </list></t>
+	</list></t>	
+
+	<t>
+	  Now the upstream router can map the new ID of R7 to an
+	  actual label value, as ID '15' corresponds to the 5th label
+	  inside the second Label block.
+	</t>
+
+      </section>
+
+
 
     </section> <!-- end 'Advertising Label Examples' -->
 
