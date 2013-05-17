@@ -10,7 +10,7 @@
 <?rfc inline="yes"?>
 <?rfc compact="yes" ?>
 <?rfc subcompact="no" ?>
-<rfc category="std" docName="draft-gredler-ospf-label-advertisement-02"
+<rfc category="std" docName="draft-gredler-ospf-label-advertisement-03"
      ipr="trust200902">
 
   <!-- ***** FRONT MATTER ***** -->
@@ -76,7 +76,7 @@
       </address>
     </author>
 
-    <date day="6" month="May" year="2013"/>
+    <date day="17" month="May" year="2013"/>
 
     <area>Routing</area>
 
@@ -470,15 +470,15 @@
     </t>
 
 
-    <section title="Prefix ERO TLVs">
+    <section title="ERO TLVs">
       <t>
-	All 'Prefix ERO' information represents an ordered set
-	which describes the segments of a label-switched path. The last Prefix
+	All 'ERO' information represents an ordered set
+	which describes the segments of a label-switched path. The last
 	ERO TLV describes the segment closest to the egress point of the
-	LSP. Contrary the first Prefix ERO TLV describes the first segment
+	LSP. Contrary the first ERO TLV describes the first segment
 	of a label switched path. If a router extends or stitches a label
 	switched path it MUST prepend the new segments path information to the
-	Prefix ERO list.
+	ERO list.
       </t>
 
     <section title="IPv4 Prefix ERO TLV">
@@ -571,7 +571,56 @@
       </figure>
     </section> <!-- end IPv6 Prefix ERO TLV -->
 
-    </section>
+    <section title="Unnumbered Interface ID ERO TLV">
+
+      <t>The appearance and semantics of the 'Unnumbered Interface ID'
+      have been borrowed from <xref target="RFC3477"> Section 4</xref>.
+      </t>
+
+      <t>The Unnumbered Interface-ID ERO TLV (Type 9)
+      describes a path segment that spans over an unnumbered
+      interface. Unnumbered interfaces are referenced using the
+      interface index. Interface indices are assigned local to
+      the router and therefore not unique within a domain. All elements
+      in an ERO path need to be unique within a domain and hence need
+      to be disambiguated using a domain unique Router-ID.
+      </t>
+
+      <t>The 'Router-ID' field contains the router ID of the router
+      which has assigned the 'Interface ID' field. Its purpose is to
+      disambiguate the 'Interface ID' field from other routers
+      in the domain.</t>
+
+      <t>The 'Interface ID' is the identifier assigned to the link
+      by the router specified by the router ID.
+      </t>
+
+      <t>The 'L' bit in the TLV is a one-bit attribute. If the L bit is
+      set, then the value of the attribute is 'loose.' Otherwise, the
+      value of the attribute is 'strict.'
+      </t>
+
+      <t>The 'Reserved' bits are for future use. They should be zero on
+      transmission and ignored on receipt.
+      </t>
+
+        <figure anchor="Unnumbered-Interface-ID-ERO-TLV-figure"
+		title="Unnumbered Interface ID ERO TLV format">
+          <artwork>
+0                   1                   2                   3
+0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|              Type             |             Length            |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|                           Router ID                           |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|                         Interface ID                          |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|L|                         Reserved                            | 
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+  </artwork> 
+        </figure>
+	</section> <!-- end Unnumbered Interface ID ERO TLV -->
 
 	<section title="IPv4 Prefix Bypass ERO TLV">
 	  <t>
@@ -625,7 +674,7 @@
 	  </t>
 
 	  <t>
-	    The 'L' bit in the subTLV is a one-bit attribute.  If the L bit is
+	    The 'L' bit in the TLV is a one-bit attribute.  If the L bit is
 	    set, then the value of the attribute is 'loose.'  Otherwise, the
 	    value of the attribute is 'strict.'
 	  </t>
@@ -651,6 +700,60 @@
 	    </artwork>
 	  </figure>
 	</section> <!-- end IPv6 Prefix Bypass ERO TLV -->
+
+    <section title="Unnumbered Interface ID Bypass ERO TLV">
+
+      <t>The appearance and semantics of the 'Unnumbered Interface ID'
+      have been borrowed from <xref target="RFC3477"> Section 4</xref>.
+      </t>
+
+      <t>The Unnumbered Interface-ID Bypass ERO TLV (Type 10)
+      describes a Bypass path segment that spans over an unnumbered
+      interface. Unnumbered interfaces are referenced using the
+      interface index. Interface indices are assigned local to
+      the router and therefore not unique within a domain. All elements
+      in an ERO path need to be unique within a domain and hence need
+      to be disambiguated using a domain unique Router-ID.
+      </t>
+
+      <t>The 'Router-ID' field contains the router ID of the router
+      which has assigned the 'Interface ID' field. Its purpose is to
+      disambiguate the 'Interface ID' field from other routers
+      in the domain.</t>
+
+      <t>The 'Interface ID' is the identifier assigned to the link
+      by the router specified by the router ID.
+      </t>
+
+      <t>The 'L' bit in the TLV is a one-bit attribute. If the L bit is
+      set, then the value of the attribute is 'loose.' Otherwise, the
+      value of the attribute is 'strict.'
+      </t>
+
+      <t>The 'Reserved' bits are for future use. They should be zero on
+      transmission and ignored on receipt.
+      </t>
+
+        <figure anchor="Unnumbered-Interface-ID-Bypass-ERO-TLV-figure"
+		title="Unnumbered Interface ID Bypass ERO TLV format">
+          <artwork>
+0                   1                   2                   3
+0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|              Type             |             Length            |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|                           Router ID                           |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|                         Interface ID                          |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|L|                         Reserved                            | 
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+  </artwork> 
+        </figure>
+	</section> <!-- end Unnumbered Interface ID Bypass ERO TLV -->
+
+    </section>
+
 
     <section anchor="flags_tlv" title="Flags TLV">
       <t>
@@ -1048,8 +1151,8 @@
 	  </list></t>
 	  <t>LSA 149, LSA-ID &lt;N2&gt;:
 	  <list>
-	    <t>IPv4 Prefix ERO subTLV: 192.168.1.5, Loose</t>
-	    <t>IPv4 Prefix ERO subTLV: 192.168.1.6, Loose</t>
+	    <t>IPv4 Prefix ERO TLV: 192.168.1.5, Loose</t>
+	    <t>IPv4 Prefix ERO TLV: 192.168.1.6, Loose</t>
 	    <t>Flags TLV: Down</t>
 	  </list></t>
 	</list></t>	
@@ -1059,14 +1162,14 @@
 	<t><list>
 	  <t>LSA 149, LSA-ID &lt;N1&gt;:
 	  <list>
-	    <t>IPv4 Prefix ERO subTLV: 192.168.1.2, Loose</t>
-	    <t>IPv4 Prefix ERO subTLV: 192.168.1.3, Loose</t>
+	    <t>IPv4 Prefix ERO TLV: 192.168.1.2, Loose</t>
+	    <t>IPv4 Prefix ERO TLV: 192.168.1.3, Loose</t>
 	    <t>Flags TLV: Down</t>
 	  </list></t>
 	  <t>LSA 149, LSA-ID &lt;N2&gt;:
 	  <list>
-	    <t>IPv4 Prefix ERO subTLV: 192.168.1.6, Loose</t>
-	    <t>IPv4 Prefix ERO subTLV: 192.168.1.3, Loose</t>
+	    <t>IPv4 Prefix ERO TLV: 192.168.1.6, Loose</t>
+	    <t>IPv4 Prefix ERO TLV: 192.168.1.3, Loose</t>
 	    <t>Flags TLV: Down</t>
 	  </list></t>
 	</list></t>	
@@ -1290,6 +1393,11 @@
 	<c>&gt;=0</c>
 
 	<c></c>
+	<c>Unnumbered Interface ID ERO</c>
+	<c>9</c>
+	<c>&gt;=0</c>
+
+	<c></c>
 	<c>IPv4 Prefix Bypass ERO</c>
 	<c>3</c>
 	<c>&gt;=0</c>
@@ -1297,6 +1405,11 @@
 	<c></c>
 	<c>IPv6 Prefix Bypass ERO</c>
 	<c>4</c>
+	<c>&gt;=0</c>
+
+	<c></c>
+	<c>Unnumbered Bypass Interface ID ERO</c>
+	<c>10</c>
 	<c>&gt;=0</c>
 
 	<c></c>
@@ -1345,6 +1458,7 @@
       <?rfc include="http://xml.resource.org/public/rfc/bibxml/reference.RFC.3031.xml"?>
       <?rfc include="http://xml.resource.org/public/rfc/bibxml/reference.RFC.3107.xml"?>
       <?rfc include="http://xml.resource.org/public/rfc/bibxml/reference.RFC.3209.xml"?>
+      <?rfc include="http://xml.resource.org/public/rfc/bibxml/reference.RFC.3477.xml"?>
       <?rfc include="http://xml.resource.org/public/rfc/bibxml/reference.RFC.3630.xml"?>
       <?rfc include="http://xml.resource.org/public/rfc/bibxml/reference.RFC.4206.xml"?>
       <?rfc include="http://xml.resource.org/public/rfc/bibxml/reference.RFC.4761.xml"?>
@@ -1355,7 +1469,7 @@
     </references>
 
     <references title="Informative References">
-      <?rfc include="http://xml.resource.org/public/rfc/bibxml3/reference.I-D.draft-gredler-rtgwg-igp-label-advertisement-04.xml"?>
+      <?rfc include="http://xml.resource.org/public/rfc/bibxml3/reference.I-D.draft-gredler-rtgwg-igp-label-advertisement-05.xml"?>
       <?rfc include="http://xml.resource.org/public/rfc/bibxml3/reference.I-D.draft-previdi-filsfils-isis-segment-routing-02.xml"?>
       <?rfc include="http://xml.resource.org/public/rfc/bibxml3/reference.I-D.draft-ietf-rtgwg-mrt-frr-architecture-02.xml"?>
 
